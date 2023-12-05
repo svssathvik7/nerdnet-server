@@ -1,5 +1,6 @@
-import userModel from "../models/userModel.js";
-import bcrypt from "bcrypt";
+const userModel = require("../models/userModel.js");
+const bcrypt = require("bcrypt");
+const userValidation = require("./userValidation.js");
 const userRegistration = async(req,res)=>{
     try {
         const salt = await bcrypt.genSalt();
@@ -22,4 +23,4 @@ const userRegistration = async(req,res)=>{
         }
     }
 }
-export default userRegistration;
+module.exports = userValidation;
