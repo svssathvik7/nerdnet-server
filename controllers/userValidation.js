@@ -8,11 +8,11 @@ const userValidation = async (req, res) => {
         if (userMatch === null || userMatch.length === 0) {
             res.status(404).json({ loginResponse: "User with email don't exist" });
         } else {
-            if (await bcrypt.compare(req.body.password, user.password)) {
+            if (await bcrypt.compare(req.body.password, userMatch.password)) {
                 const token = jwt.sign({
                     id: userMatch._id,
                     name: userMatch.name,
-                    email: email,
+                    email: userMatch.email,
                 }, process.env.JWT_SECRET_KEY, { expiresIn: "30m" });
                 res.status(200).json({ loginResponse: "Successful login",userToken : token });
             } else {
