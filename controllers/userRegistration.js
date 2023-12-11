@@ -1,6 +1,5 @@
 const userModel = require("../models/userModel.js");
 const bcrypt = require("bcrypt");
-const userValidation = require("./userValidation.js");
 const userRegistration = async(req,res)=>{
     try {
         const salt = await bcrypt.genSalt();
@@ -23,4 +22,4 @@ const userRegistration = async(req,res)=>{
         }
     }
 }
-module.exports = userValidation;
+module.exports = userRegistration;

@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const userDb = require("../models/userModel");
 const userAuthorization = async (req,res)=>{
     try{
         const authenticationHeader = req.headers.authorization;
@@ -24,4 +25,21 @@ const userAuthorization = async (req,res)=>{
         res.status(500).json({authResponse:"Something went wrong!",status:false});
     }
 }
-module.exports = userAuthorization;
+const sendUserInfo = async (req,res)=>{
+    try{
+        const token = req.body.token;
+        const decodedToken = jwt.decode(token,process.env.JWT_SECRET_KEY);
+        const targetEmail = decodedToken.email;
+        const userMatch = await userDb.findOne({email:targetEmail});
+        if(userMatch){
+            res.status(200).json({userData:userMatch,status:true});
+        }
+        else{
+            res.status(401).json({userData:"Critical security alert!",status:false});
+        }
+    }
+    catch(error){
+        res.status(500).json({userData:"Something went wrong!",status:false});
+    }
+}
+module.exports = {userAuthorization,sendUserInfo};
