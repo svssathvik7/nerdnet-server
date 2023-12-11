@@ -1,7 +1,6 @@
 const postDb = require("../models/postModel");
 const userDb = require("../models/userModel");
 const addNewPost = async (req,res)=>{
-    console.log(req.body);
     try{
         const {email} = req.body.backendData;
         const userMatch = await userDb.findOne({email:email});
