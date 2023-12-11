@@ -1,11 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const postModel = require("../models/postModel");
+const sendAllPosts = require("../controllers/sendAllPosts");
 const addNewPost = require("../controllers/addNewPost");
 router.post("/newPost",addNewPost);
-router.get("/getAllPosts",async (req,res)=>{
-    const posts = await postModel.find({});
-    res.json(posts);
-})
+router.get("/getAllPosts",sendAllPosts);
 
 module.exports = router;
