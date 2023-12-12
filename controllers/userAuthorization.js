@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const userDb = require("../models/userModel");
+const userModel = require("../models/userModel");
 const userAuthorization = async (req,res)=>{
     try{
         const authenticationHeader = req.headers.authorization;
@@ -30,7 +31,13 @@ const sendUserInfo = async (req,res)=>{
         const token = req.body.token;
         const decodedToken = jwt.decode(token,process.env.JWT_SECRET_KEY);
         const targetEmail = decodedToken.email;
-        const userMatch = await userDb.findOne({email:targetEmail});
+        const userMatch = await userDb.findOne({email:targetEmail}).populate({
+            path : "posts",
+            populate : {
+                path : "userPosted",
+                model : "users"
+            }
+        });
         if(userMatch){
             res.status(200).json({userData:userMatch,status:true});
         }

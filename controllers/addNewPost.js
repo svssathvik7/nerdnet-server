@@ -14,7 +14,9 @@ const addNewPost = async (req,res)=>{
                 caption : req.body.backendData.caption ? req.body.backendData.caption : "",
                 time : Date.now()
             });
-            newPost.save();
+            await newPost.save();
+            await userMatch.posts.push(newPost);
+            await userMatch.save();
             res.status(200).json({postStatus:"Post added succesfully",status:true});
         }
         else{
