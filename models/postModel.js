@@ -28,6 +28,10 @@ const postSchema = new mongoose.Schema({
     time : {
         type : Date,
         default : Date.now()
+    },
+    tags : {
+        type : [String],
+        required : true
     }
 });
 

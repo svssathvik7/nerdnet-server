@@ -12,7 +12,8 @@ const addNewPost = async (req,res)=>{
                 likes : 0,
                 comments : [],
                 caption : req.body.backendData.caption ? req.body.backendData.caption : "",
-                time : Date.now()
+                time : Date.now(),
+                tags : req.body.backendData.tags ? req.body.backendData.tags : ["others"]
             });
             await newPost.save();
             await userMatch.posts.push(newPost);
