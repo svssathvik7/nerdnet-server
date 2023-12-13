@@ -18,6 +18,10 @@ const userSchema = mongoose.Schema({
         type : String,
         required : true
     },
+    education : {
+        type : String,
+        default : "Enthusiast at Nerd.net"
+    },
     posts : {
         type : [mongoose.Schema.Types.ObjectId],
         ref : "posts",
