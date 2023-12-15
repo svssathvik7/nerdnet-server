@@ -19,6 +19,7 @@ const updateProfile = async (req,res)=>{
         }
     }
     catch(error){
+        console.log(error);
         res.status(500).json({updateResponse:"Something went wrong!",status:false});
     }
 }

@@ -25,6 +25,7 @@ const addNewPost = async (req,res)=>{
         }
     }
     catch(error){
+        console.log(error);
         res.status(500).json({postStatus:"Something went wrong!",status:false});
     }
 }
