@@ -23,4 +23,30 @@ const updateProfile = async (req,res)=>{
         res.status(500).json({updateResponse:"Something went wrong!",status:false});
     }
 }
-module.exports = updateProfile;
+const updateFollower = async (req,res)=>{
+    const master = req.body.masterAcc;
+    const follower = req.body.followerAcc;
+    try{
+        const masterUser = await userDb.findOne({email:master});
+        const followerUser = await userDb.findOne({email:follower});
+        if(masterUser && followerUser){
+            const result1 = await userDb.updateOne({email:master},{
+                $push : {followers : followerUser}
+            });
+            const result2 = await userDb.updateOne({email:follower},{
+                $push : {
+                    following : masterUser
+                }
+            });
+            res.status(200).json({ updateProfile: "Update successful!", status: true });
+        }
+        else{
+            res.status(401).json({updateProfile:"User not found!",status:false});
+        }
+    }
+    catch(error){
+        console.log(error);
+        res.status(500).json({updateProfile:"Something went wrong!",status:false});
+    }
+}
+module.exports = {updateProfile,updateFollower};

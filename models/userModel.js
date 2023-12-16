@@ -25,6 +25,16 @@ const userSchema = mongoose.Schema({
     posts : {
         type : [mongoose.Schema.Types.ObjectId],
         ref : "posts",
+    },
+    followers : {
+        type : [mongoose.Schema.Types.ObjectId],
+        ref : "users",
+        default : [],
+    },
+    following : {
+        type : [mongoose.Schema.Types.ObjectId],
+        ref : "users",
+        default : [],
     }
 });
 const userModel = mongoose.model("users",userSchema);
