@@ -13,7 +13,9 @@ const getUserProfile = async (req,res)=>{
                 email : userMatch.email,
                 education : userMatch.education,
                 posts : userMatch.posts,
-                isfollowing : userMatch.followers.includes(reqUserMatch._id)
+                isfollowing : userMatch.followers.includes(reqUserMatch._id),
+                followers : userMatch.followers,
+                following : userMatch.following
             }
             res.status(200).json({profileResponse:"User details sent!",userProfile:userProfileData});
         }
