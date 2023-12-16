@@ -18,8 +18,8 @@ const postSchema = new mongoose.Schema({
         default : 0
     },
     comments : {
-        type : [String],
-        default : []
+        type : [mongoose.Schema.Types.ObjectId],
+        ref : "comments"
     },
     caption : {
         type : String,
