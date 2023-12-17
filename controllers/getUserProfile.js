@@ -1,9 +1,16 @@
 const userDb = require("../models/userModel");
 const getUserProfile = async (req,res)=>{
+    const check = async (userMatch,reqUserMatch)=>{
+        const follList = userMatch.followers;
+        return follList.some(foll => (foll._id).equals(reqUserMatch._id));
+    }
     try{
         const targetEmail = req.body.profileEmail;
         const requestingEmail = req.body.requestEmail;
-        const userMatch = await userDb.findOne({email:targetEmail}).populate("posts");
+        const userMatch = await userDb.findOne({email:targetEmail}).populate({
+            path : 'posts followers following',
+            select : '-password'
+        }).exec();
         const reqUserMatch = await userDb.findOne({email:requestingEmail});
         if(userMatch && reqUserMatch)
         {
@@ -13,7 +20,7 @@ const getUserProfile = async (req,res)=>{
                 email : userMatch.email,
                 education : userMatch.education,
                 posts : userMatch.posts,
-                isfollowing : userMatch.followers.includes(reqUserMatch._id),
+                isfollowing : await check(userMatch,reqUserMatch),
                 followers : userMatch.followers,
                 following : userMatch.following
             }
