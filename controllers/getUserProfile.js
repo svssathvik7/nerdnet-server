@@ -7,10 +7,23 @@ const getUserProfile = async (req,res)=>{
     try{
         const targetEmail = req.body.profileEmail;
         const requestingEmail = req.body.requestEmail;
-        const userMatch = await userDb.findOne({email:targetEmail}).populate({
-            path : 'posts followers following',
-            select : '-password'
-        }).exec();
+        const userMatch = await userDb.findOne({email:targetEmail}).populate([
+            {
+                path : 'posts followers following',
+                select : '-password',
+            },
+            {
+                path : 'posts',
+                populate : {
+                    path : 'comments',
+                    populate : {
+                        path : 'commentedUser',
+                        select : '-password'
+                    }
+                }
+            }
+
+        ]).exec();
         const reqUserMatch = await userDb.findOne({email:requestingEmail});
         if(userMatch && reqUserMatch)
         {
