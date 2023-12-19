@@ -11,6 +11,9 @@ const sendAllPosts = async (req,res)=>{
             select : '-password'
           },
         },
+        {
+          path : 'likes dislikes'
+        }
       ]);
     res.json(posts);
 }

@@ -1,7 +1,6 @@
 const postDb = require("../models/postModel");
 const commentDb = require("../models/commentModel");
 const userDb = require("../models/userModel");
-
 const addComment = async (req, res) => {
     console.log(req.body);
     try {
@@ -36,4 +35,32 @@ const addComment = async (req, res) => {
     }
 };
 
-module.exports = { addComment };
+const changeLikes = async (req,res)=>{
+    try{
+        const {postId,addLike,userLiked} = req.body;
+        console.log(req.body);
+        const postMatch = await postDb.findOne({_id:postId});
+        if(postMatch){
+            if(addLike){
+                const postUpdated = await postDb.updateOne(
+                    { _id: postId },
+                    { $push: { likes: userLiked } }
+                );                
+            }
+            else{
+                const postUpdated = await postDb.updateOne(
+                    { _id: postId },
+                    { $pull: { likes: userLiked } }
+                );                
+            }
+            res.json({message:"Success!",status:true});
+        }
+        else{
+            res.json({message:"Error updating",status:false});
+        }
+    }
+    catch(error){
+        res.json({message:"Error updating",status:false});
+    }
+}
+module.exports = { addComment,changeLikes };

@@ -1,40 +1,56 @@
 const mongoose = require("mongoose");
+const uniqueValidator = require('mongoose-unique-validator');
 
 const postSchema = new mongoose.Schema({
-    isMultimedia : {
-        type : Boolean,
-        required : true
+    isMultimedia: {
+        type: Boolean,
+        required: true
     },
-    userPosted : {
-        type : mongoose.Schema.Types.ObjectId,
-        ref : "users"
+    userPosted: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "users"
     },
-    postData : {
-        type : String,
-        required : true,
+    postData: {
+        type: String,
+        required: true,
     },
-    likes : {
-        type : Number,
-        default : 0
+    likes: {
+        type: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "users",
+            unique: true
+        }],
+        default: []
     },
-    comments : {
-        type : [mongoose.Schema.Types.ObjectId],
-        ref : "comments"
+    comments: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: "comments"
     },
-    caption : {
-        type : String,
-        default : ""
+    caption: {
+        type: String,
+        default: ""
     },
-    time : {
-        type : Date,
-        default : Date.now()
+    time: {
+        type: Date,
+        default: Date.now()
     },
-    tags : {
-        type : [String],
-        required : true
+    tags: {
+        type: [String],
+        required: true
+    },
+    dislikes : {
+        type: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "users",
+            unique: true
+        }],
+        default: [],
     }
 });
 
-const postModel = new mongoose.model("posts",postSchema);
+// Apply the unique validator plugin to the likes field
+postSchema.plugin(uniqueValidator);
+
+const postModel = mongoose.model("posts", postSchema);
 
 module.exports = postModel;
