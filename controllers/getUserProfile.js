@@ -21,9 +21,16 @@ const getUserProfile = async (req,res)=>{
                         select : '-password'
                     }
                 }
+            },
+            {
+                path : 'posts',
+                populate : {
+                    path : 'likes dislikes'
+                }
             }
 
         ]).exec();
+        console.log(userMatch);
         const reqUserMatch = await userDb.findOne({email:requestingEmail});
         if(userMatch && reqUserMatch)
         {

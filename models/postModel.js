@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const uniqueValidator = require('mongoose-unique-validator');
 
 const postSchema = new mongoose.Schema({
     isMultimedia: {
@@ -8,7 +7,7 @@ const postSchema = new mongoose.Schema({
     },
     userPosted: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "users"
+        ref: "users",
     },
     postData: {
         type: String,
@@ -18,7 +17,6 @@ const postSchema = new mongoose.Schema({
         type: [{
             type : mongoose.Schema.Types.ObjectId,
             ref : 'users',
-            unique : true
         }],
         default: [],
     },
@@ -42,14 +40,10 @@ const postSchema = new mongoose.Schema({
         type: [{
             type : mongoose.Schema.Types.ObjectId,
             ref : 'users',
-            unique : true
         }],
         default: [],
     }
 });
-
-// Apply the unique validator plugin to the likes field
-postSchema.plugin(uniqueValidator);
 
 const postModel = mongoose.model("posts", postSchema);
 

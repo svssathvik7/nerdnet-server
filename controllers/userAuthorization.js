@@ -31,10 +31,11 @@ const sendUserInfo = async (req,res)=>{
         const token = req.body.token;
         const decodedToken = jwt.decode(token,process.env.JWT_SECRET_KEY);
         const targetEmail = decodedToken.email;
-        const userMatch = await userDb.findOne({email:targetEmail}).populate([{
+        const userMatch = await userDb.findOne({email:targetEmail}).populate([
+            {
             path : "posts followers following",
             select : '-password',
-        },
+            },
             {
                 path : 'posts',
                 populate : {
@@ -43,6 +44,12 @@ const sendUserInfo = async (req,res)=>{
                         path : 'commentedUser'
                     }
                 },
+            },
+            {
+                path : "posts",
+                populate : {
+                    path : "likes dislikes"
+                }
             }
         ]).exec();
         if(userMatch){
