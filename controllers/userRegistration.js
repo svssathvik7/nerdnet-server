@@ -8,7 +8,7 @@ const userRegistration = async(req,res)=>{
             username : req.body.username,
             email : req.body.email,
             password : password,
-            dp : req.body.dp
+            dp : req?.body?.dp
         });
         await newUser.save();
         res.status(200).json({customResponse:"User has been successfully created!"});

@@ -37,6 +37,31 @@ const sendUserInfo = async (req,res)=>{
             select : '-password',
             },
             {
+                path: 'following',
+                populate: {
+                  path: 'posts',
+                  select: '-password',
+                  populate: {
+                    path: 'userPosted comments likes dislikes',
+                    select: '-password',
+                  },
+                },
+                select: '-password',
+            },   
+            {
+                path : 'following',
+                populate : {
+                    path : "posts",
+                    populate : {
+                        path : 'comments',
+                        populate : {
+                            path : 'commentedUser',
+                            select : '-passowrd'
+                        }
+                    }
+                }
+            },           
+            {
                 path : 'posts',
                 populate : {
                     path : 'comments',

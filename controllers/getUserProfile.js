@@ -30,7 +30,6 @@ const getUserProfile = async (req,res)=>{
             }
 
         ]).exec();
-        console.log(userMatch);
         const reqUserMatch = await userDb.findOne({email:requestingEmail});
         if(userMatch && reqUserMatch)
         {
