@@ -2,7 +2,6 @@ const postDb = require("../models/postModel");
 const commentDb = require("../models/commentModel");
 const userDb = require("../models/userModel");
 const addComment = async (req, res) => {
-    console.log(req.body);
     try {
         const postId = req.body.postId;
         const commentText = req.body.comment;
@@ -38,17 +37,36 @@ const addComment = async (req, res) => {
 const changeLikes = async (req,res)=>{
     try{
         const {postId,addLike,userLiked} = req.body;
-        console.log(req.body);
         const postMatch = await postDb.findOne({_id:postId});
         if(postMatch){
             if(addLike){
-                const postUpdated = await postDb.updateOne(
+                const alreadyExists = await postMatch.likes.some(like => like?._id === userLiked?._id);
+                if(!alreadyExists){
+                    var postUpdated = await postDb.updateOne(
+                        { _id: postId },
+                        { $addToSet: { likes: userLiked } },
+                        );                
+                    }
+                    else{
+                    res.json({message:"Error updating",status:false});
+                }
+                var postUpdated = await postDb.updateOne(
                     { _id: postId },
-                    { $push: { likes: userLiked } }
-                );                
+                    { $pull: { dislikes: userLiked } }
+                );    
             }
             else{
-                const postUpdated = await postDb.updateOne(
+                const alreadyExists = await postMatch.dislikes.some(dislike => dislike?._id === userLiked?._id);
+                if(!alreadyExists){
+                    var postUpdated = await postDb.updateOne(
+                        { _id: postId },
+                        { $addToSet: { dislikes: userLiked } },
+                    );                
+                }
+                else{
+                    res.json({message:"Error updating",status:false});
+                }
+                var postUpdated = await postDb.updateOne(
                     { _id: postId },
                     { $pull: { likes: userLiked } }
                 );                

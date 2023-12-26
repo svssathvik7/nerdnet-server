@@ -14,13 +14,13 @@ const postSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    likes: {
+    likes : {
         type: [{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "users",
-            unique: true
+            type : mongoose.Schema.Types.ObjectId,
+            ref : 'users',
+            unique : true
         }],
-        default: []
+        default: [],
     },
     comments: {
         type: [mongoose.Schema.Types.ObjectId],
@@ -40,9 +40,9 @@ const postSchema = new mongoose.Schema({
     },
     dislikes : {
         type: [{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "users",
-            unique: true
+            type : mongoose.Schema.Types.ObjectId,
+            ref : 'users',
+            unique : true
         }],
         default: [],
     }
