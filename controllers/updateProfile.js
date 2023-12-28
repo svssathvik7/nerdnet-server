@@ -26,18 +26,31 @@ const updateProfile = async (req,res)=>{
 const updateFollower = async (req,res)=>{
     const master = req.body.masterAcc;
     const follower = req.body.followerAcc;
+    const isFollowing = req.body.isFollowing;
     try{
         const masterUser = await userDb.findOne({email:master});
         const followerUser = await userDb.findOne({email:follower});
         if(masterUser && followerUser){
-            const result1 = await userDb.updateOne({email:master},{
-                $push : {followers : followerUser}
-            });
-            const result2 = await userDb.updateOne({email:follower},{
-                $push : {
-                    following : masterUser
-                }
-            });
+            if(!isFollowing){
+                const result1 = await userDb.updateOne({email:master},{
+                    $push : {followers : followerUser}
+                });
+                const result2 = await userDb.updateOne({email:follower},{
+                    $push : {
+                        following : masterUser
+                    }
+                });
+            }
+            else{
+                const result1 = await userDb.updateOne({email:master},{
+                    $pull : {followers : followerUser._id}
+                });
+                const result2 = await userDb.updateOne({email:follower},{
+                    $pull : {
+                        following : masterUser._id
+                    }
+                });
+            }
             res.status(200).json({ updateProfile: "Update successful!", status: true });
         }
         else{
