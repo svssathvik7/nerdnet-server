@@ -11,7 +11,7 @@ const sendAllUsers = async (req,res)=>{
 const sendQueriedUsers = async (req,res)=>{
     const queryString = req.query.q;
     try{
-        const regex = new RegExp(`^${queryString}`,'i');
+        const regex = new RegExp(`${queryString}`,'i');
         const matchingUsers = await userDb.find({username:regex});
         console.log(matchingUsers);
         res.status(200).json({message:"Successfully retrieved search data",status:true,result:matchingUsers});
