@@ -1,5 +1,5 @@
 const userModel = require("../models/userModel.js");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const userRegistration = async(req,res)=>{
     try {
             const salt = await bcrypt.genSalt();
