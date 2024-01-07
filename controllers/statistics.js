@@ -1,9 +1,27 @@
 const userDb = require("../models/userModel");
 const postDb = require("../models/postModel");
-const sendAllUsers = async (req,res)=>{
+const sendTrendingNerds = async (req,res)=>{
     try{
-        const allDbNerds = await userDb.find({});
-        res.json({message:"Success",status:true,users:allDbNerds});
+        const sortedTrendingNerds = await userDb.aggregate(
+            [
+                {
+                    $project : {
+                        username : 1,
+                        email : 1,
+                        followersCount : {$size:"$followers"}
+                    }
+                },
+                {
+                    $sort : {
+                        followersCount : -1
+                    }
+                },
+                {
+                    $limit : 5
+                }
+            ]
+        );
+        res.json({message:"Success",status:true,nerds:sortedTrendingNerds});
     }
     catch(error){
         res.json({message:"Error!",status:false});
@@ -37,4 +55,4 @@ const sendTrendingTopics = async (req,res)=>{
         res.status(500).json({message:"Something went wrong!",status:false});
     }
 }
-module.exports = {sendAllUsers,sendQueriedUsers,sendTrendingTopics};
+module.exports = {sendTrendingNerds,sendQueriedUsers,sendTrendingTopics};
