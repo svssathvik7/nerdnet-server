@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const {sendTrendingNerds} = require("../controllers/statistics");
-const {sendQueriedUsers} = require("../controllers/statistics");
+const {searchQueryResponse} = require("../controllers/statistics");
 const {sendTrendingTopics} = require("../controllers/statistics");
 const {sendTrendingPosts} = require("../controllers/statistics");
 const {getPostById} = require("../controllers/statistics");
 router.get("/getTrendingNerds/",sendTrendingNerds);
-router.get("/search/",sendQueriedUsers);
+router.get("/search/",searchQueryResponse);
 router.get("/getTrendingTopics/",sendTrendingTopics);
 router.get("/getTrendingPosts/",sendTrendingPosts);
 router.get("/posts/",getPostById);

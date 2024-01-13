@@ -27,16 +27,44 @@ const sendTrendingNerds = async (req,res)=>{
         res.json({message:"Error!",status:false});
     }
 }
-const sendQueriedUsers = async (req,res)=>{
+const searchQueryResponse = async (req,res)=>{
     const queryString = req.query.q;
-    try{
-        const regex = new RegExp(`${queryString}`,'i');
-        const matchingUsers = await userDb.find({username:regex});
-        console.log(matchingUsers);
-        res.status(200).json({message:"Successfully retrieved search data",status:true,result:matchingUsers});
+    const postQuery = req.query.p;
+    if(queryString){
+        try{
+            const regex = new RegExp(`${queryString}`,'i');
+            const matchingUsers = await userDb.find({username:regex});
+            res.status(200).json({message:"Successfully retrieved search data",status:true,result:matchingUsers});
+        }
+        catch(error){
+            res.status(500).json({message:"Error retrieving search data!",status:false});
+        }
     }
-    catch(error){
-        res.status(500).json({message:"Error retrieving search data!",status:false});
+    else{
+        try {
+            const matchingPosts = await postDb.aggregate([
+                {$match : {'tags' : {$in : [postQuery]}}}
+            ]);
+            const updatedMatchPosts = await postDb.populate(matchingPosts,[
+                {
+                    path: 'userPosted',
+                  },
+                  {
+                    path: 'comments',
+                    populate: {
+                      path: 'commentedUser',
+                      select : '-password'
+                    },
+                  },
+                  {
+                    path : 'likes dislikes'
+                  }
+            ]);
+            res.status(200).json({message:"Succesfully retreived data",status:true,posts:updatedMatchPosts});
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({message:"Error retreiving search data!",status:false});
+        }
     }
 }
 const sendTrendingTopics = async (req,res)=>{
@@ -95,4 +123,4 @@ const getPostById = async (req,res)=>{
         res.status(500).json({message:"Something went wrong!",status:false});
     }
 }
-module.exports = {sendTrendingNerds,sendQueriedUsers,sendTrendingTopics,sendTrendingPosts,getPostById};
+module.exports = {sendTrendingNerds,searchQueryResponse,sendTrendingTopics,sendTrendingPosts,getPostById};
