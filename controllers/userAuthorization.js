@@ -33,8 +33,8 @@ const sendUserInfo = async (req,res)=>{
         const targetEmail = decodedToken.email;
         const userMatch = await userDb.findOne({email:targetEmail}).populate([
             {
-            path : "posts followers following",
-            select : '-password',
+                path : "posts followers following",
+                select : '-password',
             },
             {
                 path: 'following',
