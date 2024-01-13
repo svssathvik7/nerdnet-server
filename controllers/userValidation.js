@@ -14,6 +14,7 @@ const userValidation = async (req, res) => {
                     name: userMatch.name,
                     email: userMatch.email,
                 }, process.env.JWT_SECRET_KEY, { expiresIn: "30m" });
+                
                 res.status(200).json({ loginResponse: "Successful login",userToken : token });
             } else {
                 res.status(401).json({ loginResponse: "Incorrect password!" });

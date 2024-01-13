@@ -37,6 +37,11 @@ const userSchema = mongoose.Schema({
         type : [mongoose.Schema.Types.ObjectId],
         ref : "users",
         default : [],
+    },
+    joined : {
+        type : Date,
+        required : true,
+        default : Date.now
     }
 });
 const userModel = mongoose.model("users",userSchema);

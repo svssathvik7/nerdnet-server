@@ -6,7 +6,7 @@ const postRoute = require("./routes/postRouting.js");
 const statRoute = require("./routes/stats.js");
 const express = require("express");
 const cors = require("cors");
-
+const userDb = require("./models/userModel.js");
 const app = express();
 
 app.use(cors());
