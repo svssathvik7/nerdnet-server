@@ -60,6 +60,7 @@ const searchQueryResponse = async (req,res)=>{
                     path : 'likes dislikes'
                   }
             ]);
+            // console.log(updatedMatchPosts);
             res.status(200).json({message:"Succesfully retreived data",status:true,posts:updatedMatchPosts});
         } catch (error) {
             console.log(error);
