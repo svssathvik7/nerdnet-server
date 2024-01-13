@@ -74,7 +74,21 @@ const sendTrendingPosts = async (req,res)=>{
 const getPostById = async (req,res)=>{
     try {
         const postId = req.query.postId;
-        const post = await postDb.findById(postId);
+        const post = await postDb.findById(postId).populate([
+            {
+                path: 'userPosted',
+            },
+            {
+                path: 'comments',
+                populate: {
+                    path: 'commentedUser',
+                    select : '-password'
+                },
+            },
+            {
+                path : 'likes dislikes'
+            }
+        ]);
         res.status(200).json({message:"Succuessfull response",status:true,post:post});
     } catch (error) {
         console.log(error);
