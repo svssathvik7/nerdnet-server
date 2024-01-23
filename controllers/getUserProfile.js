@@ -1,4 +1,5 @@
 const userDb = require("../models/userModel");
+const debugLog = require("../server");
 const getUserProfile = async (req,res)=>{
     const check = async (userMatch,reqUserMatch)=>{
         const follList = userMatch.followers;
@@ -50,7 +51,7 @@ const getUserProfile = async (req,res)=>{
         }
     }
     catch(error){
-        console.log(error);
+        debugLog(error);
         res.status(500).json({profileResponse:"Error sending profile",userProfile:false});
     }
 }

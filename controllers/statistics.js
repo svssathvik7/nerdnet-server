@@ -60,10 +60,10 @@ const searchQueryResponse = async (req,res)=>{
                     path : 'likes dislikes'
                   }
             ]);
-            // console.log(updatedMatchPosts);
+            debugLog(updatedMatchPosts);
             res.status(200).json({message:"Succesfully retreived data",status:true,posts:updatedMatchPosts});
         } catch (error) {
-            console.log(error);
+            debugLog(error);
             res.status(500).json({message:"Error retreiving search data!",status:false});
         }
     }
@@ -96,7 +96,7 @@ const sendTrendingPosts = async (req,res)=>{
         res.status(200).json({message:"Successfull retreival!",status:true,posts:trendingPosts});
     }
     catch(error){
-        console.log(error);
+        debugLog(error);
         res.status(500).json({message:"Something went wrong!",status:false});
     }
 }
@@ -120,7 +120,7 @@ const getPostById = async (req,res)=>{
         ]);
         res.status(200).json({message:"Succuessfull response",status:true,post:post});
     } catch (error) {
-        console.log(error);
+        debugLog(error);
         res.status(500).json({message:"Something went wrong!",status:false});
     }
 }

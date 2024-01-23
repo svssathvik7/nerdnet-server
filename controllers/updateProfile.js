@@ -1,4 +1,5 @@
 const userDb = require("../models/userModel");
+const debugLog = require("../server");
 const updateProfile = async (req,res)=>{
     try{
         const targetMail = req.body.email;
@@ -19,7 +20,7 @@ const updateProfile = async (req,res)=>{
         }
     }
     catch(error){
-        console.log(error);
+        debugLog(error);
         res.status(500).json({updateResponse:"Something went wrong!",status:false});
     }
 }
@@ -58,7 +59,7 @@ const updateFollower = async (req,res)=>{
         }
     }
     catch(error){
-        console.log(error);
+        debugLog(error);
         res.status(500).json({updateProfile:"Something went wrong!",status:false});
     }
 }

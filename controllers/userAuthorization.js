@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const userDb = require("../models/userModel");
 const userModel = require("../models/userModel");
+const debugLog = require("../server");
 const userAuthorization = async (req,res)=>{
     try{
         const authenticationHeader = req.headers.authorization;
@@ -85,7 +86,7 @@ const sendUserInfo = async (req,res)=>{
         }
     }
     catch(error){
-        console.log(error);
+        debugLog(error);
         res.status(500).json({userData:"Something went wrong!",status:false});
     }
 }

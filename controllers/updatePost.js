@@ -1,6 +1,8 @@
 const postDb = require("../models/postModel");
 const commentDb = require("../models/commentModel");
 const userDb = require("../models/userModel");
+const debugLog = require("../server");
+const {session} = require("../db/dataBase");
 const addComment = async (req, res) => {
     try {
         const postId = req.body.postId;
@@ -11,25 +13,27 @@ const addComment = async (req, res) => {
         const userMatch = await userDb.findOne({ email: userEmail });
 
         if (postMatch && userMatch) {
-            const newComment = new commentDb({
-                post: postMatch._id,
-                commentedUser: userMatch._id,
-                data: commentText,
-            });
+            await session.withTransaction(async ()=>{
+                const newComment = new commentDb({
+                    post: postMatch._id,
+                    commentedUser: userMatch._id,
+                    data: commentText,
+                });
+                await newComment.save();
+                await postDb.updateOne(
+                    { _id: postMatch._id },
+                    { $push: { comments: newComment._id } }
+                );
+                res.status(200).json({ commentUpdate: "Successfully added comment!", status: true });
+            }).catch(error=>{
+                throw error;
+            })
 
-            await newComment.save();
-
-            const update = await postDb.updateOne(
-                { _id: postMatch._id },
-                { $push: { comments: newComment._id } }
-            );
-
-            res.status(200).json({ commentUpdate: "Successfully added comment!", status: true });
         } else {
             res.status(404).json({ commentUpdate: "Post or user not found!", status: false });
         }
     } catch (error) {
-        console.error(error);
+        debugLog(error);
         res.status(500).json({ commentUpdate: "Something went wrong!", status: false });
     }
 };

@@ -1,5 +1,6 @@
 const userModel = require("../models/userModel.js");
 const bcrypt = require("bcryptjs");
+const debugLog = require("../server.js");
 const userRegistration = async(req,res)=>{
     try {
             const salt = await bcrypt.genSalt();
@@ -17,8 +18,8 @@ const userRegistration = async(req,res)=>{
             return res.status(400).json({ customResponse: "User with Email/Username already exists", error: error });
         }
         else{
+            debugLog(error);
             res.status(500).json({ customResponse: "Error while saving user!", error:error });
-            console.log(error);
         }
     }
 }
