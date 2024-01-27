@@ -1,5 +1,6 @@
 const userDb = require("../models/userModel");
 const debugLog = require("../server");
+const postDb = require("../models/postModel");
 const updateProfile = async (req,res)=>{
     try{
         const targetMail = req.body.email;
@@ -63,4 +64,30 @@ const updateFollower = async (req,res)=>{
         res.status(500).json({updateProfile:"Something went wrong!",status:false});
     }
 }
-module.exports = {updateProfile,updateFollower};
+const alterSavedPost = async (req,res)=>{
+    try{
+        const {userId,postId,operation} = req.body;
+        const userMatch = await userDb.findById(userId);
+        const postMatch = await postDb.findById(postId);
+        if(userMatch && postMatch){
+            if(operation==="add")
+            {
+                await userMatch.savedPosts.push(postMatch._id);
+                await userMatch.save();
+            }
+            else{
+                await userMatch.savedPosts.pull(postMatch._id);
+                await userMatch.save();
+            }
+            res.status(200).json({message:"Successfull update!",status:true});
+        }
+        else{
+            res.status(401).json({message:"Critical db inconsistency!",status:false});
+        }
+    }
+    catch(error){
+        console.log(error);
+        res.status(500).json({message:"Something went wrong!!",status:false});
+    }
+}
+module.exports = {updateProfile,updateFollower,alterSavedPost};
