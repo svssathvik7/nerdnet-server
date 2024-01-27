@@ -29,28 +29,28 @@ const getUserProfile = async (req,res)=>{
                     path : 'likes dislikes'
                 }
             },
-            {
-                path : 'savePosts',
-                populate : {
-                    path : 'likes dislikes'
-                }
-            },
-            {
-                path : 'savedPosts',
-                populate : {
-                    path : 'comments',
-                    populate : {
-                        path : 'commentedUser',
-                        select : '-password'
-                    }
-                }
-            },
-            {
-                path : 'savedPosts',
-                populate : {
-                    path : 'userPosted'
-                }
-            }
+            // {
+            //     path : 'savePosts',
+            //     populate : {
+            //         path : 'likes dislikes'
+            //     }
+            // },
+            // {
+            //     path : 'savedPosts',
+            //     populate : {
+            //         path : 'comments',
+            //         populate : {
+            //             path : 'commentedUser',
+            //             select : '-password'
+            //         }
+            //     }
+            // },
+            // {
+            //     path : 'savedPosts',
+            //     populate : {
+            //         path : 'userPosted'
+            //     }
+            // }
         ]).exec();
         const reqUserMatch = await userDb.findOne({email:requestingEmail});
         if(userMatch && reqUserMatch)
