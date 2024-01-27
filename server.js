@@ -14,11 +14,11 @@ const app = express();
 app.use(cors());
 app.use(helmet());
 app.use(express.json());
-if(app.get('env') === 'development')
-{
-    app.use(morgan('tiny'));
-    console.log("Morgan enabled...")
-}
+// if(app.get('env') === 'development')
+// {
+//     app.use(morgan('tiny'));
+//     console.log("Morgan enabled...")
+// }
 
 app.use("/api/auth/", authRoute);
 app.use("/api/posts/",postRoute);

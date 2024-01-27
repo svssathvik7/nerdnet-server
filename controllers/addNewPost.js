@@ -1,11 +1,11 @@
 const postDb = require("../models/postModel");
 const userDb = require("../models/userModel");
-const debugLog = require("../server");
-const {session} = require("../db/dataBase");
+const {getSession} = require("../db/dataBase");
 const addNewPost = async (req,res)=>{
     try{
         const {email} = req.body.backendData;
         const userMatch = await userDb.findOne({email:email});
+        const session = await getSession();
         if(userMatch){
             const newPost = new postDb({
                 isMultimedia : req.body.backendData.isMultimedia,
@@ -24,7 +24,7 @@ const addNewPost = async (req,res)=>{
                 await userMatch.save();
                 res.status(200).json({postStatus:"Post added succesfully",status:true});
             }).catch(error=>{
-                debugLog('Transaction failed:', error);
+                console.log('Transaction failed:', error);
                 throw error;
             })
         }
@@ -33,7 +33,7 @@ const addNewPost = async (req,res)=>{
         }
     }
     catch(error){
-        debugLog(error);
+        console.log(error);
         res.status(500).json({postStatus:"Something went wrong!",status:false});
     }
 }

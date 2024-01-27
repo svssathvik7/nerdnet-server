@@ -51,7 +51,7 @@ const getUserProfile = async (req,res)=>{
         }
     }
     catch(error){
-        debugLog(error);
+        console.log(error);
         res.status(500).json({profileResponse:"Error sending profile",userProfile:false});
     }
 }

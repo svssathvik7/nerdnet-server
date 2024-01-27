@@ -22,7 +22,7 @@ const userValidation = async (req, res) => {
             }
         }
     } catch (error) {
-        debugLog(error);
+        console.log(error);
         res.status(500).json({ loginResponse: "Internal server error!" });
     }
 };

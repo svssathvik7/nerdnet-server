@@ -1,5 +1,6 @@
 const userDb = require("../models/userModel");
 const postDb = require("../models/postModel");
+const debugLog = require("debug")("app:debugLog");
 const sendTrendingNerds = async (req,res)=>{
     try{
         const sortedTrendingNerds = await userDb.aggregate(
@@ -60,10 +61,9 @@ const searchQueryResponse = async (req,res)=>{
                     path : 'likes dislikes'
                   }
             ]);
-            debugLog(updatedMatchPosts);
             res.status(200).json({message:"Succesfully retreived data",status:true,posts:updatedMatchPosts});
         } catch (error) {
-            debugLog(error);
+            console.log(error);
             res.status(500).json({message:"Error retreiving search data!",status:false});
         }
     }
@@ -96,7 +96,7 @@ const sendTrendingPosts = async (req,res)=>{
         res.status(200).json({message:"Successfull retreival!",status:true,posts:trendingPosts});
     }
     catch(error){
-        debugLog(error);
+        console.log(error);
         res.status(500).json({message:"Something went wrong!",status:false});
     }
 }
@@ -120,7 +120,7 @@ const getPostById = async (req,res)=>{
         ]);
         res.status(200).json({message:"Succuessfull response",status:true,post:post});
     } catch (error) {
-        debugLog(error);
+        console.log(error);
         res.status(500).json({message:"Something went wrong!",status:false});
     }
 }

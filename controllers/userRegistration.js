@@ -18,7 +18,7 @@ const userRegistration = async(req,res)=>{
             return res.status(400).json({ customResponse: "User with Email/Username already exists", error: error });
         }
         else{
-            debugLog(error);
+            console.log(error);
             res.status(500).json({ customResponse: "Error while saving user!", error:error });
         }
     }

@@ -2,16 +2,32 @@ const dotenv = require("dotenv");
 dotenv.config();
 const mongoose = require("mongoose");
 const url = process.env.DB_CONNECTION_STRING;
-mongoose.connect(url);
-const db = mongoose.connection;
-var session;
-db.on("error", () => {
-    console.log("err");
-});
 
-db.once("open", async () => {
-    session = await mongoose.startSession();
-    console.log("Successful connection to Mongodb database");
-});
+let sessionPromise;
+let db;
 
-module.exports = {db,session};
+const initializeDb = async () => {
+    return new Promise((resolve, reject) => {
+        mongoose.connect(url);
+        db = mongoose.connection;
+
+        db.on("error", (err) => {
+            console.error("MongoDB connection error:", err);
+            reject(err);
+        });
+
+        db.once("open", async () => {
+            sessionPromise = mongoose.startSession();
+            await sessionPromise;
+            console.log("Successful connection to MongoDB database");
+            resolve();
+        });
+    });
+};
+
+initializeDb();
+
+module.exports = {
+    db: () => db,
+    getSession: () => sessionPromise,
+};
