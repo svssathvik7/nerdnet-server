@@ -2,6 +2,10 @@ const {chatDb} = require("../models/chatModel");
 const {messageDb} = require("../models/chatModel");
 const {getSession} = require("../db/dataBase");
 const userDb = require("../models/userModel");
+const urlRegex = /(https?:\/\/[^\s]+)$/;
+const isUrl = (text)=>{
+    return urlRegex.test(text);
+}
 const getChat = async (req,res)=>{
     const {chatId} = req.body;
     try{
@@ -35,6 +39,7 @@ const addMessage = async (req,res)=>{
                     const newMessage = await new messageDb({
                         user : userMatch._id,
                         message : message,
+                        isUrl : isUrl(message)
                     });
                     await newMessage.save();
                     await chatSessionMatch.chats.push(newMessage);

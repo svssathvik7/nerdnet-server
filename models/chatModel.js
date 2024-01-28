@@ -13,6 +13,10 @@ const messageSchema = new mongoose.Schema({
     message : {
         type : String,
         required : true
+    },
+    isUrl : {
+        type : Boolean,
+        default : false
     }
 })
 
