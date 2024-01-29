@@ -9,7 +9,7 @@ const isUrl = (text)=>{
 const getChat = async (req,res)=>{
     const {chatId} = req.body;
     try{
-        const chats = await chatDb.findOne({id:chatId}).populate("chats chats.user");
+        const chats = await chatDb.findOne({id:chatId}).populate("chats chats.user chats.reaction.userReacted");
         if(chats){
             res.status(200).json({message:"Success",status:true,data:chats});
         }
@@ -62,5 +62,24 @@ const addMessage = async (req,res)=>{
         res.status(500).json({message:"Something went wrong!",status:false});
     }
 }
-
-module.exports = {getChat,addMessage};
+const addChatReaction = async (req,res)=>{
+    const {messageId,reaction,userId} = req.body;
+    try{
+        const messageMatch = await messageDb.findById(messageId);
+        const userMatch = await userDb.findById(userId);
+        if(messageMatch && userMatch){
+            await messageMatch.reactions.push({userReacted:userId,reaction:reaction});
+            console.log(messageMatch);
+            await messageMatch.save();
+            res.status(200).json({message:"Success",status:true});
+        }
+        else{
+            res.status(401).json({message:"Critical Security threat!",status:false});
+        }
+    }
+    catch(error){
+        console.log(error);
+        res.status(500).json({message:"Something went wrong!",status:false});
+    }
+}
+module.exports = {getChat,addMessage,addChatReaction};

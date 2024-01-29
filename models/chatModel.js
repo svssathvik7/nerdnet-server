@@ -17,7 +17,17 @@ const messageSchema = new mongoose.Schema({
     isUrl : {
         type : Boolean,
         default : false
-    }
+    },
+    reactions : [{
+      userReacted : {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : 'users',
+        unique : true
+      },
+      reaction : {
+        type : String
+      }
+    }]
 })
 
 const messageDb = new mongoose.model("messages",messageSchema);
