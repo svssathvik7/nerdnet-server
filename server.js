@@ -8,7 +8,9 @@ const chatRoute = require("./routes/chatRouting.js");
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
-const morgan = require("morgan");
+const {Server} = require("socket.io");
+const {getChat,addMessage} = require("./controllers/chatController.js");
+// const morgan = require("morgan");
 const debugLog = require("debug")("app:debugLog");
 const app = express();
 
@@ -26,7 +28,23 @@ app.use("/api/posts/",postRoute);
 app.use("/api/stats/",statRoute);
 app.use("/api/chat/",chatRoute);
 
-app.listen(3500, () => {
+const expressServer = app.listen(3500, () => {
     debugLog("Server running!");
 });
-module.exports = debugLog;
+
+const io = new Server(expressServer,
+{
+    cors : "http:localhost:3000",
+    methods : ["Get","Post","Delete"]
+});
+
+io.on("connection",(socket)=>{
+    socket.on("fetch-chat",(data)=>{
+        getChat({socket,data});
+    });
+    socket.on("add-message",(data)=>{
+        addMessage({socket,data});
+    });
+});
+
+module.exports = {io};

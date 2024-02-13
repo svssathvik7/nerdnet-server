@@ -6,29 +6,29 @@ const urlRegex = /(https?:\/\/[^\s]+)$/;
 const isUrl = (text)=>{
     return urlRegex.test(text);
 }
-const getChat = async (req,res)=>{
-    const {chatId} = req.body;
+const getChat = async ({socket,data})=>{
+    const chatId = data.chatId;
     try{
         const chats = await chatDb.findOne({id:chatId}).populate("chats chats.user chats.reaction.userReacted");
         if(chats){
-            res.status(200).json({message:"Success",status:true,data:chats});
+            socket.emit("fetched-data",{message:"Success",status:true,data:chats});
         }
         else{
             const chatSession = await new chatDb({
                 id : chatId
             });
             await chatSession.save();
-            res.status(200).json({message:"Success",status:true,data:chatSession});
+            socket.emit("fetched-data",{message:"Success",status:true,data:chatSession});
         }
     }
     catch(error){
         console.log(error);
-        res.status(500).json({message:"Something went wrong!",status:false});
+        socket.emit("fetched-data",{message:"Something went wrong!",status:false});
     }
 }
 
-const addMessage = async (req,res)=>{
-    const {chatId,userId,message} = req.body;
+const addMessage = async ({socket,data})=>{
+    const {chatId,userId,message} = data;
     const session = await getSession();
     try{
         const chatSessionMatch = await chatDb.findOne({id:chatId});
@@ -44,22 +44,22 @@ const addMessage = async (req,res)=>{
                     await newMessage.save();
                     await chatSessionMatch.chats.push(newMessage);
                     await chatSessionMatch.save();
-                    res.status(200).json({message:"Success",status:true});
+                    socket.emit("added-message",{message:"Success",status:true});
                 })
             }
             else{
-                res.status(401).json({message:"No chat room found!",status:false});
+                socket.emit("added-message",{message:"No chat room found!",status:false});
             }
             // session.commitTransaction();
         }
         else{
-            res.status(401).json({message:"Critical Security threat!",status:false});
+            socket.emit("added-message",{message:"Critical Security threat!",status:false});
         }
     }
     catch(error){
         console.log(error);
         // session.abortTransaction();
-        res.status(500).json({message:"Something went wrong!",status:false});
+        socket.emit("fetched-data",{message:"Something went wrong!",status:false});
     }
 }
 const addChatReaction = async (req,res)=>{
