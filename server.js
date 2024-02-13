@@ -34,7 +34,7 @@ const expressServer = app.listen(3500, () => {
 
 const io = new Server(expressServer,
 {
-    cors : "http:localhost:3000",
+    cors : "0.0.0.0",
     methods : ["Get","Post","Delete"]
 });
 
