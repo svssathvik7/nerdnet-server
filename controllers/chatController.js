@@ -84,7 +84,7 @@ const addChatReaction = async (req,res)=>{
 }
 
 const addRecentChats = async (req, res) => {
-    console.log("Adding a friend", req.body); // More informative log message
+    const {userId,friendId} = req.body;
     try {
         const userMatch = await userDb.findById(userId);
         const frndMatch = await userDb.findById(friendId);
