@@ -49,6 +49,15 @@ const userSchema = mongoose.Schema({
         ref : 'posts'
         }],
         default : []
+    },
+    recentChats : {
+        type : [
+            {
+                type : mongoose.Schema.Types.ObjectId,
+                ref : 'users'
+            },
+        ],
+        default : []
     }
 });
 const userModel = mongoose.model("users",userSchema);

@@ -93,6 +93,9 @@ const sendUserInfo = async (req,res)=>{
                     path : "likes dislikes userPosted"
                 }
             },
+            {
+                path : "recentChats"
+            }
         ]).exec();
         if(userMatch){
             res.status(200).json({userData:userMatch,status:true});

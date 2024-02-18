@@ -82,4 +82,24 @@ const addChatReaction = async (req,res)=>{
         res.status(500).json({message:"Something went wrong!",status:false});
     }
 }
-module.exports = {getChat,addMessage,addChatReaction};
+
+const addRecentChats = async (req, res) => {
+    console.log("Adding a friend", req.body); // More informative log message
+    try {
+        const userMatch = await userDb.findById(userId);
+        const frndMatch = await userDb.findById(friendId);
+        if (userMatch && frndMatch) {
+            // Assuming recentChats is an array field in your schema
+            userMatch.recentChats.push(friendId);
+            await userMatch.save();
+            res.status(200).json({ message: "Successfully added friend to recent chats!", status: true });
+        } else {
+            res.status(401).json({ message: "Unauthorized access or user not found!", status: false });
+        }
+    } catch (error) {
+        console.error("Error in adding recent chat:", error); // Improved error logging
+        res.status(500).json({ message: "Something went wrong!", status: false });
+    }
+}
+
+module.exports = {getChat,addMessage,addChatReaction,addRecentChats};
