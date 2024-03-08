@@ -5,6 +5,7 @@ const authRoute = require("./routes/authentication.js");
 const postRoute = require("./routes/postRouting.js");
 const statRoute = require("./routes/stats.js");
 const chatRoute = require("./routes/chatRouting.js");
+const communityRoute = require("./routes/community.js");
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
@@ -27,7 +28,7 @@ app.use("/api/auth/", authRoute);
 app.use("/api/posts/",postRoute);
 app.use("/api/stats/",statRoute);
 app.use("/api/chat/",chatRoute);
-
+app.use("/api/community/",communityRoute);
 const expressServer = app.listen(3500, () => {
     debugLog("Server running!");
 });

@@ -1,5 +1,6 @@
 const userDb = require("../models/userModel");
 const postDb = require("../models/postModel");
+const { communityModel } = require("../models/communityModel");
 const debugLog = require("debug")("app:debugLog");
 const sendTrendingNerds = async (req,res)=>{
     try{
@@ -35,7 +36,8 @@ const searchQueryResponse = async (req,res)=>{
         try{
             const regex = new RegExp(`${queryString}`,'i');
             const matchingUsers = await userDb.find({username:regex});
-            res.status(200).json({message:"Successfully retrieved search data",status:true,result:matchingUsers});
+            const matchingCommunities = await communityModel.find({name:regex});
+            res.status(200).json({message:"Successfully retrieved search data",status:true,usersresult:matchingUsers,communityresult:matchingCommunities});
         }
         catch(error){
             res.status(500).json({message:"Error retrieving search data!",status:false});
