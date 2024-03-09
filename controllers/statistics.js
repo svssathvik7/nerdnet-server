@@ -1,6 +1,7 @@
 const userDb = require("../models/userModel");
 const postDb = require("../models/postModel");
 const { communityModel } = require("../models/communityModel");
+const userModel = require("../models/userModel");
 const debugLog = require("debug")("app:debugLog");
 const sendTrendingNerds = async (req,res)=>{
     try{
@@ -126,4 +127,22 @@ const getPostById = async (req,res)=>{
         res.status(500).json({message:"Something went wrong!",status:false});
     }
 }
-module.exports = {sendTrendingNerds,searchQueryResponse,sendTrendingTopics,sendTrendingPosts,getPostById};
+const getMySpaces = async (req,res)=>{
+    console.log("spaces")
+    const {user} = req.body;
+    try {
+       const userMatch = await userModel.findOne({_id:user}).populate("spaces");
+       console.log(userMatch.spaces)
+       if(userMatch)
+       {
+        res.status(200).json({message:"Successfull space retreival!",status:true,spaces:userMatch.spaces});
+       }
+       else{
+        res.status(401).json({message:"Failed to get user!",status:false});
+       } 
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({message:"Something went wrong!",status:false});
+    }
+}
+module.exports = {sendTrendingNerds,searchQueryResponse,sendTrendingTopics,sendTrendingPosts,getPostById,getMySpaces};
