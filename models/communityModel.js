@@ -31,7 +31,16 @@ const communitySchema = new mongoose.Schema({
             type: Boolean,
             default: false // Default value for isAdmin
         }
-    }]
+    }],
+    createdBy : {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "users",
+        required : true
+    },
+    dateCreated : {
+        type : Date,
+        default : Date.now
+    }
 });
 
 const communityModel = mongoose.model("Community", communitySchema);

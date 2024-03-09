@@ -58,7 +58,13 @@ const userSchema = mongoose.Schema({
             },
         ],
         default : []
-    }
+    },
+    spaces : [
+        {
+            type : mongoose.Schema.Types.ObjectId,
+            ref : "communities"
+        }
+    ]
 });
 const userModel = mongoose.model("users",userSchema);
 module.exports = userModel;
