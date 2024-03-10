@@ -1,6 +1,7 @@
 const userDb = require("../models/userModel");
 const debugLog = require("../server");
 const getUserProfile = async (req,res)=>{
+    console.log(req.body);
     const check = async (userMatch,reqUserMatch)=>{
         const follList = userMatch.followers;
         return follList.some(foll => (foll._id).equals(reqUserMatch._id));

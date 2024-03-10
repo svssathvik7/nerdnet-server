@@ -145,4 +145,40 @@ const getMySpaces = async (req,res)=>{
         res.status(500).json({message:"Something went wrong!",status:false});
     }
 }
-module.exports = {sendTrendingNerds,searchQueryResponse,sendTrendingTopics,sendTrendingPosts,getPostById,getMySpaces};
+const getUserInformation = async(req,res)=>{
+    const {user} = req.body;
+    try {
+        const userMatch = await userDb.findOne({id:user}).populate([
+            {
+                path : 'posts followers following savedPosts',
+                select : '-password',
+            },
+            {
+                path : 'posts',
+                populate : {
+                    path : 'comments',
+                    populate : {
+                        path : 'commentedUser',
+                        select : '-password'
+                    }
+                }
+            },
+            {
+                path : 'posts',
+                populate : {
+                    path : 'likes dislikes'
+                }
+            }
+        ]).exec();
+        if(userMatch){
+            res.status(200).json({message:"Successfull retreival!",status:true,user:userMatch});
+        }
+        else{
+            res.status(401).json({message:"User not found!",status:false});
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({message:"Something went wrong!",status:false});
+    }
+}
+module.exports = {sendTrendingNerds,searchQueryResponse,sendTrendingTopics,sendTrendingPosts,getPostById,getMySpaces,getUserInformation};
