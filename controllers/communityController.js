@@ -15,12 +15,15 @@ const createCommunity = async(req,res)=>{
                     subject : data.subject,
                     description : data.description,
                     createdBy : data.user,
-                    dateCreated : Date.now()
+                    dateCreated : Date.now(),
+                    followers : [data.user]
                 }
             );
             await newCommunity.save();
             await userModel.findOneAndUpdate({_id:data.user},{
-                $push : { spaces : newCommunity._id}
+                $push : { 
+                    spaces : newCommunity._id
+                }
             });
             res.status(200).json({message:"Added new community!",status:true,result:newCommunity._id});
         }

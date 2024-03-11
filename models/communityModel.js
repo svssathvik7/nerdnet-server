@@ -40,7 +40,11 @@ const communitySchema = new mongoose.Schema({
     dateCreated : {
         type : Date,
         default : Date.now
-    }
+    },
+    followers : [{
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "users"
+    }]
 });
 
 const communityModel = mongoose.model("communities", communitySchema);

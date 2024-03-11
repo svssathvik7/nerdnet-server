@@ -1,6 +1,7 @@
 const userDb = require("../models/userModel");
 const debugLog = require("../server");
 const postDb = require("../models/postModel");
+const { communityModel } = require("../models/communityModel");
 const updateProfile = async (req,res)=>{
     try{
         const targetMail = req.body.email;
@@ -90,4 +91,31 @@ const alterSavedPost = async (req,res)=>{
         res.status(500).json({message:"Something went wrong!!",status:false});
     }
 }
-module.exports = {updateProfile,updateFollower,alterSavedPost};
+const updateUserSpaces = async(req,res)=>{
+    try {
+        const {user} = req.body;
+        const {space} = req.body;
+        const userMatch = await userDb.findById(user);
+        const spaceMatch = await communityModel.findById(space);
+        if(userMatch && spaceMatch){
+            await userDb.findOneAndUpdate({_id:userMatch._id},{
+                $push : {
+                    spaces : spaceMatch._id
+                }
+            });
+            await communityModel.findOneAndUpdate({_id:spaceMatch._id},{
+                $push : {
+                    followers : userMatch._id
+                }
+            });
+            res.status(200).json({message:"Successfull subsctiption",status:true});
+        }
+        else{
+            res.status(401).json({message:"Critical db inconsistency!",status:false});
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({message:"Something went wrong!!",status:false});
+    }
+}
+module.exports = {updateProfile,updateFollower,alterSavedPost,updateUserSpaces};
