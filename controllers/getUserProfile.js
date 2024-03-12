@@ -11,7 +11,7 @@ const getUserProfile = async (req,res)=>{
         const requestingEmail = req.body.requestEmail;
         const userMatch = await userDb.findOne({email:targetEmail}).populate([
             {
-                path : 'posts followers following savedPosts',
+                path : 'posts followers following savedPosts spaces',
                 select : '-password',
             },
             {
@@ -43,7 +43,8 @@ const getUserProfile = async (req,res)=>{
                 isfollowing : await check(userMatch,reqUserMatch),
                 followers : userMatch.followers,
                 following : userMatch.following,
-                savedPosts : userMatch.savedPosts
+                savedPosts : userMatch.savedPosts,
+                spaces : userMatch.spaces
             }
             res.status(200).json({profileResponse:"User details sent!",userProfile:userProfileData});
         }

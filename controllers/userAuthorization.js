@@ -36,7 +36,7 @@ const sendUserInfo = async (req,res)=>{
         const targetEmail = decodedToken.email;
         const userMatch = await userDb.findOne({email:targetEmail}).populate([
             {
-                path : "posts followers following savedPosts",
+                path : "posts followers following savedPosts spaces",
                 select : '-password',
             },
             {
