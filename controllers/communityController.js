@@ -38,7 +38,24 @@ const createCommunity = async(req,res)=>{
 const getCommunityInfo = async(req,res)=>{
     const {id} = req.body;
     try {
-        const community_match = await communityModel.findOne({_id:id});
+        const community_match = await communityModel.findOne({_id:id}).populate([
+            {
+                path : "posts",
+                populate : {
+                    path : "userPosted likes dislikes comments"
+                }
+            },
+            {
+                path : "posts",
+                populate : {
+                    path : "comments",
+                    populate : {
+                        path : "commentedUser",
+                        select : "-password"
+                    }
+                }
+            }
+        ]);
         if(community_match){
             res.status(200).json({message:"Community found",status:true,community_info:community_match});
         }

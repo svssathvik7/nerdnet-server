@@ -44,6 +44,10 @@ const communitySchema = new mongoose.Schema({
     followers : [{
         type : mongoose.Schema.Types.ObjectId,
         ref : "users"
+    }],
+    posts : [{
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "posts"
     }]
 });
 
