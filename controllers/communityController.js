@@ -35,10 +35,10 @@ const createCommunity = async(req,res)=>{
         res.status(500).json({message:"Something went wrong!",status:false});
     }
 }
-const getCommunityInfo = async(req,res)=>{
-    const {id} = req.body;
+const getCommunityInfo = async({socket,data})=>{
+    console.log(data)
     try {
-        const community_match = await communityModel.findOne({_id:id}).populate([
+        const community_match = await communityModel.findOne({_id:data.id}).populate([
             {
                 path : "posts",
                 populate : {
@@ -57,13 +57,13 @@ const getCommunityInfo = async(req,res)=>{
             }
         ]);
         if(community_match){
-            res.status(200).json({message:"Community found",status:true,community_info:community_match});
+            return ({message:"Community found",status:true,community_info:community_match});
         }
         else{
-            res.status(401).json({message:"Community not found!",status:false});
+            return ("set-community-info",{message:"Community not found!",status:false});
         }
     } catch (error) {
-        res.status(500).json({message:"Something went wrong!",status:false});
+        return ("set-community-info",{message:"Something went wrong!",status:false});
     }
 }
 module.exports = {createCommunity,getCommunityInfo};

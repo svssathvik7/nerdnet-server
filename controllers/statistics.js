@@ -145,8 +145,8 @@ const getMySpaces = async (req,res)=>{
         res.status(500).json({message:"Something went wrong!",status:false});
     }
 }
-const getUserInformation = async(req,res)=>{
-    const {user} = req.body;
+const getUserInformation = async({socket,data})=>{
+    const user = data.user;
     try {
         const userMatch = await userDb.findOne({id:user}).populate([
             {
@@ -171,14 +171,14 @@ const getUserInformation = async(req,res)=>{
             }
         ]).exec();
         if(userMatch){
-            res.status(200).json({message:"Successfull retreival!",status:true,user:userMatch});
+            return ({message:"Successfull retreival!",status:true,user:userMatch});
         }
         else{
-            res.status(401).json({message:"User not found!",status:false});
+            return ({message:"User not found!",status:false});
         }
     } catch (error) {
         console.log(error);
-        res.status(500).json({message:"Something went wrong!",status:false});
+        return ({message:"Something went wrong!",status:false});
     }
 }
 module.exports = {sendTrendingNerds,searchQueryResponse,sendTrendingTopics,sendTrendingPosts,getPostById,getMySpaces,getUserInformation};

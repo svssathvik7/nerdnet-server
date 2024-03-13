@@ -16,7 +16,6 @@ const userAuthorization = async (req,res)=>{
                     res.status(401).json({authResponse:"No active session!",status:false});
                 }
                 else{
-                    console.log("Active session");
                     res.status(200).json({authResponse:"User validated!",status:true});
                 }
             }
