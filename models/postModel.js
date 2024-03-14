@@ -45,6 +45,17 @@ const postSchema = new mongoose.Schema({
     }
 });
 
+function noDuplicateUsers(value) {
+    return Array.isArray(value) && new Set(value).size === value.length;
+}
+postSchema.path("likes").validate({
+    validator: noDuplicateUsers,
+    message: 'Duplicate likes are not allowed'
+});
+postSchema.path("dislikes").validate({
+    validator: noDuplicateUsers,
+    message: 'Duplicate dislikes are not allowed'
+});
 const postModel = mongoose.model("posts", postSchema);
 
 module.exports = postModel;

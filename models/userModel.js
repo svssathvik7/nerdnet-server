@@ -66,5 +66,25 @@ const userSchema = mongoose.Schema({
         }
     ]
 });
+
+function noDuplicateUsers(value) {
+    return Array.isArray(value) && new Set(value).size === value.length;
+}
+userSchema.path("spaces").validate({
+    validator: noDuplicateUsers,
+    message: 'Duplicate spaces are not allowed'
+});
+userSchema.path("posts").validate({
+    validator: noDuplicateUsers,
+    message: 'Duplicate posts are not allowed'
+});
+userSchema.path("followers").validate({
+    validator: noDuplicateUsers,
+    message: 'Duplicate followers are not allowed'
+});
+userSchema.path("following").validate({
+    validator: noDuplicateUsers,
+    message: 'Duplicate following are not allowed'
+});
 const userModel = mongoose.model("users",userSchema);
 module.exports = userModel;
