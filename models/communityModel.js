@@ -50,6 +50,12 @@ const communitySchema = new mongoose.Schema({
         ref : "posts"
     }]
 });
-
+function noDuplicateUsers(value) {
+    return Array.isArray(value) && new Set(value).size === value.length;
+}
+communitySchema.path("followers").validate({
+    validator: noDuplicateUsers,
+    message: 'Duplicate users are not allowed'
+});
 const communityModel = mongoose.model("communities", communitySchema);
 module.exports = { communityModel };

@@ -12,7 +12,7 @@ const cors = require("cors");
 const helmet = require("helmet");
 const {Server} = require("socket.io");
 const {getChat,addMessage} = require("./controllers/chatController.js");
-const { getUserInformation } = require("./controllers/statistics.js");
+const { getUserInformation, sendTrendingNerds, sendTrendingTopics, sendTrendingPosts, getMySpaces } = require("./controllers/statistics.js");
 const getUserProfile = require("./controllers/getUserProfile.js");
 // const morgan = require("morgan");
 const debugLog = require("debug")("app:debugLog");
@@ -60,7 +60,23 @@ io.on("connection",(socket)=>{
     socket.on("get-profile-details",async(data,callback)=>{
         const response = await getUserProfile({socket,data});
         callback(response);
-    })
+    });
+    socket.on("get-trending-nerds",async(callback)=>{
+        const response = await sendTrendingNerds();
+        callback(response);
+    });
+    socket.on("get-trending-topics",async(callback)=>{
+        const response = await sendTrendingTopics();
+        callback(response);
+    });
+    socket.on("get-trending-posts",async(callback)=>{
+        const response = await sendTrendingPosts();
+        callback(response);
+    });
+    socket.on("get-user-spaces",async(data,callback)=>{
+        const response = await getMySpaces({socket,data});
+        callback(response);
+    });
 });
 
 module.exports = {io};

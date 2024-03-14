@@ -24,10 +24,10 @@ const sendTrendingNerds = async (req,res)=>{
                 }
             ]
         );
-        res.json({message:"Success",status:true,nerds:sortedTrendingNerds});
+        return ({message:"Success",status:true,nerds:sortedTrendingNerds});
     }
     catch(error){
-        res.json({message:"Error!",status:false});
+        return ({message:"Error!",status:false});
     }
 }
 const searchQueryResponse = async (req,res)=>{
@@ -38,10 +38,10 @@ const searchQueryResponse = async (req,res)=>{
             const regex = new RegExp(`${queryString}`,'i');
             const matchingUsers = await userDb.find({username:regex});
             const matchingCommunities = await communityModel.find({name:regex});
-            res.status(200).json({message:"Successfully retrieved search data",status:true,usersresult:matchingUsers,communityresult:matchingCommunities});
+            return ({message:"Successfully retrieved search data",status:true,usersresult:matchingUsers,communityresult:matchingCommunities});
         }
         catch(error){
-            res.status(500).json({message:"Error retrieving search data!",status:false});
+            return ({message:"Error retrieving search data!",status:false});
         }
     }
     else{
@@ -64,10 +64,10 @@ const searchQueryResponse = async (req,res)=>{
                     path : 'likes dislikes'
                   }
             ]);
-            res.status(200).json({message:"Succesfully retreived data",status:true,posts:updatedMatchPosts});
+            return ({message:"Succesfully retreived data",status:true,posts:updatedMatchPosts});
         } catch (error) {
             console.log(error);
-            res.status(500).json({message:"Error retreiving search data!",status:false});
+            return ({message:"Error retreiving search data!",status:false});
         }
     }
 }
@@ -81,10 +81,10 @@ const sendTrendingTopics = async (req,res)=>{
                 {$limit : 5}
             ]
         );
-        res.status(200).json({message:"Successfull retreival!",status:true,tags:trendingTopics});
+        return ({message:"Successfull retreival!",status:true,tags:trendingTopics});
     }
     catch(error){
-        res.status(500).json({message:"Something went wrong!",status:false});
+        return ({message:"Something went wrong!",status:false});
     }
 }
 const sendTrendingPosts = async (req,res)=>{
@@ -96,11 +96,11 @@ const sendTrendingPosts = async (req,res)=>{
                 {$project : {postData:1,_id:1,caption:1}}
             ]
         );
-        res.status(200).json({message:"Successfull retreival!",status:true,posts:trendingPosts});
+        return ({message:"Successfull retreival!",status:true,posts:trendingPosts});
     }
     catch(error){
         console.log(error);
-        res.status(500).json({message:"Something went wrong!",status:false});
+        return ({message:"Something went wrong!",status:false});
     }
 }
 const getPostById = async (req,res)=>{
@@ -127,22 +127,20 @@ const getPostById = async (req,res)=>{
         res.status(500).json({message:"Something went wrong!",status:false});
     }
 }
-const getMySpaces = async (req,res)=>{
-    console.log("spaces")
-    const {user} = req.body;
+const getMySpaces = async ({socket,data})=>{
+    const user = data.user;
     try {
        const userMatch = await userModel.findOne({_id:user}).populate("spaces");
-       console.log(userMatch.spaces)
        if(userMatch)
        {
-        res.status(200).json({message:"Successfull space retreival!",status:true,spaces:userMatch.spaces});
+        return ({message:"Successfull space retreival!",status:true,spaces:userMatch.spaces});
        }
        else{
-        res.status(401).json({message:"Failed to get user!",status:false});
+        return ({message:"Failed to get user!",status:false});
        } 
     } catch (error) {
         console.log(error);
-        res.status(500).json({message:"Something went wrong!",status:false});
+        return ({message:"Something went wrong!",status:false});
     }
 }
 const getUserInformation = async({socket,data})=>{
