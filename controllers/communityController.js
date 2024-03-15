@@ -66,4 +66,24 @@ const getCommunityInfo = async({socket,data})=>{
         return ("set-community-info",{message:"Something went wrong!",status:false});
     }
 }
-module.exports = {createCommunity,getCommunityInfo};
+const checkUserSubscription = async({socket,data})=>{
+    try {
+        const userMatch = await userModel.findOne({_id:data.user_id});
+        const communityMatch = await communityModel.findOne({_id:data.community_id});
+        if(userMatch && communityMatch){
+            if(communityMatch.followers.includes(userMatch._id)){
+                return ({message:"Successfull check!",status:true,subscriptionStatus:true});
+            }
+            else{
+                return ({message:"Successfull check!",status:true,subscriptionStatus:false});
+            }
+        }
+        else{
+            return ({message:"User or Community not found!",status:false});
+        }
+    } catch (error) {
+        console.log(error);
+        return ({message:"Something went wrong!",status:false});
+    }
+}
+module.exports = {createCommunity,getCommunityInfo,checkUserSubscription};

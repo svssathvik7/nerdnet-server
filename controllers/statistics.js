@@ -38,10 +38,10 @@ const searchQueryResponse = async (req,res)=>{
             const regex = new RegExp(`${queryString}`,'i');
             const matchingUsers = await userDb.find({username:regex});
             const matchingCommunities = await communityModel.find({name:regex});
-            return ({message:"Successfully retrieved search data",status:true,usersresult:matchingUsers,communityresult:matchingCommunities});
+            res.status(200).json({message:"Successfully retrieved search data",status:true,usersresult:matchingUsers,communityresult:matchingCommunities});
         }
         catch(error){
-            return ({message:"Error retrieving search data!",status:false});
+            res.status(500).json({message:"Error retrieving search data!",status:false});
         }
     }
     else{

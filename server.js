@@ -6,7 +6,7 @@ const postRoute = require("./routes/postRouting.js");
 const statRoute = require("./routes/stats.js");
 const chatRoute = require("./routes/chatRouting.js");
 const communityRoute = require("./routes/community.js");
-const {createCommunity,getCommunityInfo} = require("./controllers/communityController");
+const {createCommunity,getCommunityInfo, checkUserSubscription} = require("./controllers/communityController");
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
@@ -75,6 +75,10 @@ io.on("connection",(socket)=>{
     });
     socket.on("get-user-spaces",async(data,callback)=>{
         const response = await getMySpaces({socket,data});
+        callback(response);
+    });
+    socket.on("check-community-subscription",async(data,callback)=>{
+        const response = await checkUserSubscription({socket,data});
         callback(response);
     });
 });
