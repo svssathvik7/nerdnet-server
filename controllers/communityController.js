@@ -16,7 +16,8 @@ const createCommunity = async(req,res)=>{
                     description : data.description,
                     createdBy : data.user,
                     dateCreated : Date.now(),
-                    followers : [data.user]
+                    followers : [data.user],
+                    admins : [data.user]
                 }
             );
             await newCommunity.save();

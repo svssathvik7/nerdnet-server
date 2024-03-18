@@ -98,17 +98,23 @@ const updateUserSpaces = async(req,res)=>{
         const userMatch = await userDb.findById(user);
         const spaceMatch = await communityModel.findById(space);
         if(userMatch && spaceMatch){
-            await userDb.findOneAndUpdate({_id:userMatch._id},{
-                $push : {
-                    spaces : spaceMatch._id
-                }
-            });
-            await communityModel.findOneAndUpdate({_id:spaceMatch._id},{
-                $push : {
-                    followers : userMatch._id
-                }
-            });
-            res.status(200).json({message:"Successfull subsctiption",status:true});
+            const hasAlreadySubs = await spaceMatch.followers.includes(userMatch._id);
+            if(hasAlreadySubs){
+                throw Error("Already following!");
+            }
+            else{
+                await userDb.findOneAndUpdate({_id:userMatch._id},{
+                    $push : {
+                        spaces : spaceMatch._id
+                    }
+                });
+                await communityModel.findOneAndUpdate({_id:spaceMatch._id},{
+                    $push : {
+                        followers : userMatch._id
+                    }
+                });
+                res.status(200).json({message:"Successfull subsctiption",status:true});
+            }
         }
         else{
             res.status(401).json({message:"Critical db inconsistency!",status:false});

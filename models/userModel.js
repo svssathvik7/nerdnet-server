@@ -64,7 +64,12 @@ const userSchema = mongoose.Schema({
             type : mongoose.Schema.Types.ObjectId,
             ref : "communities"
         }
-    ]
+    ],
+    isAdmin : {
+        type : Boolean,
+        required:false,
+        default : false
+    }
 });
 
 function noDuplicateUsers(value) {
