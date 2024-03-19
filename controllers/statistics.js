@@ -146,7 +146,7 @@ const getMySpaces = async ({socket,data})=>{
 const getUserInformation = async({socket,data})=>{
     const user = data.user;
     try {
-        const userMatch = await userDb.findOne({id:user}).populate([
+        const userMatch = await userDb.findOne({_id:user}).populate([
             {
                 path : 'posts followers following savedPosts',
                 select : '-password',

@@ -69,7 +69,11 @@ const userSchema = mongoose.Schema({
         type : Boolean,
         required:false,
         default : false
-    }
+    },
+    interestsHistory : [{
+        type : String,
+        required: false
+    }]
 });
 
 function noDuplicateUsers(value) {

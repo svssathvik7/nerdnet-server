@@ -15,6 +15,7 @@ const {getChat,addMessage} = require("./controllers/chatController.js");
 const { getUserInformation, sendTrendingNerds, sendTrendingTopics, sendTrendingPosts, getMySpaces } = require("./controllers/statistics.js");
 const getUserProfile = require("./controllers/getUserProfile.js");
 const { getAllUsers, SendStatistics } = require("./controllers/adminStats.js");
+const sendAllPosts = require("./controllers/sendAllPosts.js");
 // const morgan = require("morgan");
 const debugLog = require("debug")("app:debugLog");
 const app = express();
@@ -88,6 +89,10 @@ io.on("connection",(socket)=>{
     });
     socket.on("admin-get-all-stats",async(data,callback)=>{
         const response = await SendStatistics({socket,data});
+        callback(response);
+    });
+    socket.on("get-all-posts-explore-feed",async(callback)=>{
+        const response = await sendAllPosts();
         callback(response);
     })
 });

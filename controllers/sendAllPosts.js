@@ -1,5 +1,5 @@
 const postDb = require("../models/postModel");
-const sendAllPosts = async (req,res)=>{
+const sendAllPosts = async ()=>{
     const posts = await postDb.find({}).populate([
         {
           path: 'userPosted',
@@ -15,6 +15,6 @@ const sendAllPosts = async (req,res)=>{
           path : 'likes dislikes'
         }
       ]);
-    res.json(posts);
+    return ({message:"Sending all posts",status:true,data:posts});
 }
 module.exports = sendAllPosts;
