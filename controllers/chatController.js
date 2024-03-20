@@ -8,22 +8,26 @@ const isUrl = (text)=>{
 }
 const getChat = async ({socket,data})=>{
     const chatId = data.chatId;
+    if(chatId === null){
+        socket.emit("fetched-data/"+chatId,{message:"Something went wrong!",status:false});
+        return;
+    }
     try{
-        const chats = await chatDb.findOne({id:chatId}).populate("chats chats.user chats.reaction.userReacted");
+        const chats = await chatDb.findOne({id:chatId}).populate("chats chats.user");
         if(chats){
-            socket.emit("fetched-data",{message:"Success",status:true,data:chats});
+            socket.emit("fetched-data/"+chatId,{message:"Success",status:true,data:chats});
         }
         else{
             const chatSession = await new chatDb({
                 id : chatId
             });
             await chatSession.save();
-            socket.emit("fetched-data",{message:"Success",status:true,data:chatSession});
+            socket.emit("fetched-data/"+chatId,{message:"Success",status:true,data:chatSession});
         }
     }
     catch(error){
         console.log(error);
-        socket.emit("fetched-data",{message:"Something went wrong!",status:false});
+        socket.emit("fetched-data/"+chatId,{message:"Something went wrong!",status:false});
     }
 }
 
@@ -45,6 +49,7 @@ const addMessage = async ({socket,data})=>{
                     await chatSessionMatch.chats.push(newMessage);
                     await chatSessionMatch.save();
                     socket.emit("added-message",{message:"Success",status:true});
+                    socket.emit("fetched-data/"+chatId,{message:"Success",status:true,data:chatSessionMatch});
                 })
             }
             else{
@@ -62,26 +67,26 @@ const addMessage = async ({socket,data})=>{
         socket.emit("fetched-data",{message:"Something went wrong!",status:false});
     }
 }
-const addChatReaction = async (req,res)=>{
-    const {messageId,reaction,userId} = req.body;
-    try{
-        const messageMatch = await messageDb.findById(messageId);
-        const userMatch = await userDb.findById(userId);
-        if(messageMatch && userMatch){
-            await messageMatch.reactions.push({userReacted:userId,reaction:reaction});
-            console.log(messageMatch);
-            await messageMatch.save();
-            res.status(200).json({message:"Success",status:true});
-        }
-        else{
-            res.status(401).json({message:"Critical Security threat!",status:false});
-        }
-    }
-    catch(error){
-        console.log(error);
-        res.status(500).json({message:"Something went wrong!",status:false});
-    }
-}
+// const addChatReaction = async (req,res)=>{
+//     const {messageId,reaction,userId} = req.body;
+//     try{
+//         const messageMatch = await messageDb.findById(messageId);
+//         const userMatch = await userDb.findById(userId);
+//         if(messageMatch && userMatch){
+//             await messageMatch.reactions.push({userReacted:userId,reaction:reaction});
+//             console.log(messageMatch);
+//             await messageMatch.save();
+//             res.status(200).json({message:"Success",status:true});
+//         }
+//         else{
+//             res.status(401).json({message:"Critical Security threat!",status:false});
+//         }
+//     }
+//     catch(error){
+//         console.log(error);
+//         res.status(500).json({message:"Something went wrong!",status:false});
+//     }
+// }
 
 const addRecentChats = async (req, res) => {
     const {userId,friendId} = req.body;
@@ -102,4 +107,4 @@ const addRecentChats = async (req, res) => {
     }
 }
 
-module.exports = {getChat,addMessage,addChatReaction,addRecentChats};
+module.exports = {getChat,addMessage,addRecentChats};
