@@ -58,7 +58,14 @@ const changeLikes = async (req,res)=>{
                 var postUpdated = await postDb.updateOne(
                     { _id: postId },
                     { $pull: { dislikes: userLiked } }
-                );    
+                );
+                await userDb.findOneAndUpdate({_id:userLiked},{
+                    $push : {
+                        interestsHistory : {
+                            $each : postMatch.tags
+                        }
+                    }
+                });
             }
             else{
                 const alreadyExists = await postMatch.dislikes.some(dislike => dislike?._id === userLiked?._id);

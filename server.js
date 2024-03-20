@@ -94,7 +94,7 @@ io.on("connection",(socket)=>{
     socket.on("get-all-posts-explore-feed",async(callback)=>{
         const response = await sendAllPosts();
         callback(response);
-    })
+    });
 });
 
 module.exports = {io};
