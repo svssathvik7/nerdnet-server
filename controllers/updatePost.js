@@ -60,15 +60,16 @@ const changeLikes = async (req,res)=>{
                     { _id: postId },
                     { $pull: { dislikes: userLiked } }
                 );
-                var postTagsAll = postMatch.tags + userMatch.interestsHistory;
-                var uniqueInterests = new Set(postTagsAll);
-                await userDb.findOneAndUpdate({_id:userLiked},{
+                var postTagsAll = postMatch.tags.concat(userMatch.interestsHistory);
+                var uniqueInterests = [...new Set(postTagsAll)];
+                const updatedUser = await userDb.findOneAndUpdate({_id:userLiked},{
                     $push : {
                         interestsHistory : {
                             $each : uniqueInterests
                         }
                     }
                 });
+                console.log("tags - ",updatedUser);
             }
             else{
                 const alreadyExists = await postMatch.dislikes.some(dislike => dislike?._id === userLiked?._id);
