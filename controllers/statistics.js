@@ -52,22 +52,22 @@ const searchQueryResponse = async (req,res)=>{
             const updatedMatchPosts = await postDb.populate(matchingPosts,[
                 {
                     path: 'userPosted',
-                  },
-                  {
+                },
+                {
                     path: 'comments',
                     populate: {
-                      path: 'commentedUser',
-                      select : '-password'
+                        path: 'commentedUser',
+                        select : '-password'
                     },
-                  },
-                  {
+                },
+                {
                     path : 'likes dislikes'
-                  }
+                }
             ]);
-            return ({message:"Succesfully retreived data",status:true,posts:updatedMatchPosts});
+            res.status(200).json({message:"Succesfully retreived data",status:true,posts:updatedMatchPosts});
         } catch (error) {
             console.log(error);
-            return ({message:"Error retreiving search data!",status:false});
+            res.status(500).json({message:"Error retreiving search data!",status:false});
         }
     }
 }
