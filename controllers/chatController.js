@@ -67,26 +67,7 @@ const addMessage = async ({socket,data})=>{
         socket.emit("fetched-data",{message:"Something went wrong!",status:false});
     }
 }
-// const addChatReaction = async (req,res)=>{
-//     const {messageId,reaction,userId} = req.body;
-//     try{
-//         const messageMatch = await messageDb.findById(messageId);
-//         const userMatch = await userDb.findById(userId);
-//         if(messageMatch && userMatch){
-//             await messageMatch.reactions.push({userReacted:userId,reaction:reaction});
-//             console.log(messageMatch);
-//             await messageMatch.save();
-//             res.status(200).json({message:"Success",status:true});
-//         }
-//         else{
-//             res.status(401).json({message:"Critical Security threat!",status:false});
-//         }
-//     }
-//     catch(error){
-//         console.log(error);
-//         res.status(500).json({message:"Something went wrong!",status:false});
-//     }
-// }
+
 
 const addRecentChats = async (req, res) => {
     const {userId,friendId} = req.body;
@@ -95,8 +76,13 @@ const addRecentChats = async (req, res) => {
         const frndMatch = await userDb.findById(friendId);
         if (userMatch && frndMatch) {
             // Assuming recentChats is an array field in your schema
-            userMatch.recentChats.push(friendId);
-            await userMatch.save();
+            var chatList = [...userMatch.recentChats, friendId];
+            chatList = [...new Set(chatList)];
+            await userDb.findOneAndUpdate({_id:userId},{
+                $set : {
+                    recentChats : chatList
+                }
+            });
             res.status(200).json({ message: "Successfully added friend to recent chats!", status: true });
         } else {
             res.status(401).json({ message: "Unauthorized access or user not found!", status: false });
