@@ -83,7 +83,7 @@ const addRecentChats = async (req, res) => {
                     recentChats : chatList
                 }
             });
-            res.status(200).json({ message: "Successfully added friend to recent chats!", status: true });
+            res.status(200).json({ message: "Successfully added friend to recent chats!", status: true,chatList:chatList });
         } else {
             res.status(401).json({ message: "Unauthorized access or user not found!", status: false });
         }

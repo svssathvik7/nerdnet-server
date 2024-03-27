@@ -189,7 +189,20 @@ const getUserHomeFeed = async (req, res) => {
       const followingPosts = await postDb.find({ userPosted: { $in: userMatch.following } })
         .limit(pageSize)
         .skip((pageNum - 1) * pageSize)
-        .populate('userPosted likes comments dislikes') // Populate the 'user' field to get user details
+        .populate(
+            [
+                {
+                    path : "userPosted likes comments dislikes"
+                },
+                {
+                    path : "comments",
+                    populate : {
+                        path : "commentedUser",
+                        select: "-password"
+                    }
+                }
+            ]
+        ) // Populate the 'user' field to get user details
         .exec();
       res.status(200).json({message:"Successfull retreival",status:true,posts:followingPosts,totalNumPosts:totalPosts.length});
     } catch (error) {

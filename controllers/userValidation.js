@@ -14,7 +14,7 @@ const userValidation = async (req, res) => {
                     id: userMatch._id,
                     name: userMatch.name,
                     email: userMatch.email,
-                }, process.env.JWT_SECRET_KEY, { expiresIn: "30m" });
+                }, process.env.JWT_SECRET_KEY, { expiresIn: "60m" });
                 
                 res.status(200).json({ loginResponse: "Successful login",userToken : token });
             } else {
