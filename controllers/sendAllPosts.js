@@ -15,7 +15,6 @@ const sendAllPosts = async ()=>{
           path : 'likes dislikes'
         }
       ]);
-      console.log(posts.length)
     return ({message:"Sending all posts",status:true,data:posts});
 }
 module.exports = sendAllPosts;

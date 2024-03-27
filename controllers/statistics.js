@@ -179,4 +179,22 @@ const getUserInformation = async({socket,data})=>{
         return ({message:"Something went wrong!",status:false});
     }
 }
-module.exports = {sendTrendingNerds,searchQueryResponse,sendTrendingTopics,sendTrendingPosts,getPostById,getMySpaces,getUserInformation};
+const getUserHomeFeed = async (req, res) => {
+    const { user, pageNum } = req.body;
+    const pageSize = 5;
+    try {
+      // Fetch posts by users followed by the current user
+      const userMatch = await userDb.findById(user);
+      const totalPosts = await postDb.countDocuments({userPosted : {$in : userMatch?.following}});
+      const followingPosts = await postDb.find({ userPosted: { $in: userMatch.following } })
+        .limit(pageSize)
+        .skip((pageNum - 1) * pageSize)
+        .populate('userPosted likes comments dislikes') // Populate the 'user' field to get user details
+        .exec();
+      res.status(200).json({message:"Successfull retreival",status:true,posts:followingPosts,totalNumPosts:totalPosts.length});
+    } catch (error) {
+      console.error("Error fetching user home feed:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  };  
+module.exports = {sendTrendingNerds,searchQueryResponse,sendTrendingTopics,sendTrendingPosts,getPostById,getMySpaces,getUserInformation,getUserHomeFeed};
