@@ -67,7 +67,6 @@ const changeLikes = async (req,res)=>{
                         interestsHistory : uniqueInterests
                     }
                 });
-                console.log("tags - ",uniqueInterests);
             }
             else{
                 const alreadyExists = await postMatch.dislikes.some(dislike => dislike?._id === userLiked?._id);

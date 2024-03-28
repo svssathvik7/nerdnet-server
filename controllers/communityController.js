@@ -37,7 +37,6 @@ const createCommunity = async(req,res)=>{
     }
 }
 const getCommunityInfo = async({socket,data})=>{
-    console.log(data)
     try {
         const community_match = await communityModel.findOne({_id:data.id}).populate([
             {
