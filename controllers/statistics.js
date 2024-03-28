@@ -204,6 +204,7 @@ const getUserHomeFeed = async (req, res) => {
             ]
         ) // Populate the 'user' field to get user details
         .exec();
+        console.log(totalPosts?.length)
       res.status(200).json({message:"Successfull retreival",status:true,posts:followingPosts,totalNumPosts:totalPosts.length});
     } catch (error) {
       console.error("Error fetching user home feed:", error);
