@@ -186,6 +186,9 @@ const getUserHomeFeed = async (req, res) => {
       // Fetch posts by users followed by the current user
       const userMatch = await userDb.findById(user);
       const totalPosts = await postDb.countDocuments({userPosted : {$in : userMatch?.following}});
+      if(!userMatch){
+        return res.status(401).json({message:"No user found!",status:false});
+      }
       const followingPosts = await postDb.find({ userPosted: { $in: userMatch.following } })
         .limit(pageSize)
         .skip((pageNum - 1) * pageSize)
@@ -204,8 +207,8 @@ const getUserHomeFeed = async (req, res) => {
             ]
         ) // Populate the 'user' field to get user details
         .exec();
-        console.log(totalPosts?.length)
-      res.status(200).json({message:"Successfull retreival",status:true,posts:followingPosts,totalNumPosts:totalPosts.length});
+        // console.log(pageNum,"-pagenum-len-",followingPosts?.length);
+      res.status(200).json({message:"Successfull retreival",status:true,posts:followingPosts,totalNumPosts:totalPosts});
     } catch (error) {
       console.error("Error fetching user home feed:", error);
       res.status(500).json({ error: "Internal Server Error" });
