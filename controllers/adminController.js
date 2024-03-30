@@ -20,4 +20,15 @@ const addAdminController = async (req,res)=>{
         res.status(500).json({message:"Something went wrong!",status:false});
     }
 }
-module.exports = {addAdminController};
+const getPendingInvites = async(req,res)=>{
+    const pageSize = 5;
+    const {pageNum} = req.body;
+    try {
+        const totalPages = await userModel.countDocuments({isAdmin:"pending"});
+        const pendingUsers = await userModel.find({isAdmin:"pending"}).skip((pageNum-1)*pageNum).limit(pageSize);
+        res.status(200).json({message:"Successfull retreival",status:true,pending_invites:pendingUsers,total_pages:totalPages});
+    } catch (error) {
+        res.status(500).json({message:"Something went wrong!",status:false});
+    }
+}
+module.exports = {addAdminController,getPendingInvites};
