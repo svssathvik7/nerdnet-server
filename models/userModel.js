@@ -66,9 +66,9 @@ const userSchema = mongoose.Schema({
         }
     ],
     isAdmin : {
-        type : Boolean,
+        type : String,
         required:false,
-        default : false
+        default : "false"
     },
     interestsHistory : [{
         type : String,

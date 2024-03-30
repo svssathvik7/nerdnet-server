@@ -205,7 +205,7 @@ const getUserHomeFeed = async (req, res) => {
                     }
                 }
             ]
-        ) // Populate the 'user' field to get user details
+        )
         .exec();
         // console.log(pageNum,"-pagenum-len-",followingPosts?.length);
       res.status(200).json({message:"Successfull retreival",status:true,posts:followingPosts,totalNumPosts:totalPosts});

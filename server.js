@@ -1,7 +1,7 @@
 const dotenv = require("dotenv");
 dotenv.config();
 const {db} = require("./db/dataBase.js");
-
+const adminRoute = require("./routes/adminRoute.js");
 const authRoute = require("./routes/authentication.js");
 const postRoute = require("./routes/postRouting.js");
 const statRoute = require("./routes/stats.js");
@@ -20,6 +20,7 @@ const { getAllUsers, SendStatistics } = require("./controllers/adminStats.js");
 const sendAllPosts = require("./controllers/sendAllPosts.js");
 const userModel = require("./models/userModel.js");
 const debugLog = require("debug")("app:debugLog");
+const {isAdmin} = require("./middlewares/isAdminMiddleware.js");
 const app = express();
 
 app.use(cors());
@@ -32,7 +33,8 @@ app.use("/api/stats/",statRoute);
 app.use("/api/chat/",chatRoute);
 app.use("/api/community/",communityRoute);
 app.use("/api/interests/",InterestsRoute);
-const expressServer = app.listen(3500, () => {
+app.use("/api/admins/",isAdmin,adminRoute);
+const expressServer = app.listen(3500,() => {
     debugLog("Server running!");
 });
 
