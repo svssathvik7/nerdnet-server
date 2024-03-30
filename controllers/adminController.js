@@ -5,7 +5,7 @@ const addAdminController = async (req,res)=>{
     try {
         const adminMatch = await userModel.findOne({_id:admin});
         const notification = {
-            from : adminMatch.username,
+            from : adminMatch._id,
             to : receiver_mail,
             message : `${adminMatch.username} wants you to be admin!`
         }
@@ -42,4 +42,37 @@ const getPendingInvites = async(req,res)=>{
         res.status(500).json({message:"Something went wrong!",status:false});
     }
 }
-module.exports = {addAdminController,getPendingInvites};
+const respondPendingInvite = async(req,res)=>{
+    try {
+        const {action,responder,notification_id} = req.body;        
+        if(action === "accept"){
+            const updateUser = await userModel.findOneAndUpdate({email:responder},{
+                $set : {
+                    isAdmin : "true"
+                },
+                $pull : {
+                    notifications : {
+                        _id : notification_id
+                    }
+                }
+            });
+        }
+        else if(action === "decline"){
+            const updateUser = await userModel.findOneAndUpdate({email:responder},{
+                $set : {
+                    isAdmin : "false"
+                },
+                $pull : {
+                    notifications : {
+                        _id : notification_id
+                    }
+                }
+            });
+        }
+        res.status(200).json({message:"Successfull response",status:true});
+    } catch (error) {
+        console.log(error," at respond pending invites")
+        res.status(500).json({message:"Something went wrong!",status:false});
+    }
+}
+module.exports = {addAdminController,getPendingInvites,respondPendingInvite};
