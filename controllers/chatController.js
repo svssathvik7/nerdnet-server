@@ -30,7 +30,18 @@ const getChat = async ({socket,data})=>{
         socket.emit("fetched-data/"+chatId,{message:"Something went wrong!",status:false});
     }
 }
-
+const getUrlWithouHost = async(url)=>{
+    var count=0;
+    for(var i=0;i<url.length;i++){
+        if(url[i] == '/'){
+            count += 1;
+        }
+        if(count==3){
+            return url.substring(i+1);
+        }
+    }
+    return url;
+}
 const addMessage = async ({socket,data})=>{
     const {chatId,userId,message} = data;
     const session = await getSession();
@@ -39,10 +50,11 @@ const addMessage = async ({socket,data})=>{
         const userMatch = await userDb.findOne({_id:userId});
         if(userMatch){
             if(chatSessionMatch){
+                const encodedMessage = await getUrlWithouHost(message);
                 await session.withTransaction(async ()=>{
                     const newMessage = await new messageDb({
                         user : userMatch._id,
-                        message : message,
+                        message : isUrl(message) ? encodedMessage : message,
                         isUrl : isUrl(message)
                     });
                     await newMessage.save();
