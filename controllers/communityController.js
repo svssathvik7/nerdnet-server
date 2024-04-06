@@ -86,4 +86,30 @@ const checkUserSubscription = async({socket,data})=>{
         return ({message:"Something went wrong!",status:false});
     }
 }
-module.exports = {createCommunity,getCommunityInfo,checkUserSubscription};
+const editCommunityController = async (req,res)=>{
+    try {
+        const {dp,coverPic,description,community_id} = req.body;
+        const communityMatch = await communityModel.findOne({_id:community_id});
+        if(communityMatch){
+            const updatedCommunity = await communityModel.findOneAndUpdate({_id:community_id},{
+                $set : {
+                    dp : dp.length ? dp : communityMatch.dp
+                },
+                $set : {
+                    coverPic : coverPic.length ? coverPic : communityMatch.coverPic
+                },
+                $set : {
+                    description : description.length ? description : communityMatch.description
+                }
+            });
+            return res.status(200).json({message:"Successfull update!",status:true});
+        }
+        else{
+            return res.status(401).json({message:"No community found!",status:false});
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({message:"Something went wrong!",status:false});
+    }
+}
+module.exports = {createCommunity,getCommunityInfo,checkUserSubscription,editCommunityController};
