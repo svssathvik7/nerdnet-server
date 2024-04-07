@@ -61,7 +61,8 @@ const addMessage = async ({socket,data})=>{
                     await chatSessionMatch.chats.push(newMessage);
                     await chatSessionMatch.save();
                     socket.emit("added-message",{message:"Success",status:true});
-                    socket.emit("fetched-data/"+chatId,{message:"Success",status:true,data:chatSessionMatch});
+                    const populateMessages = await chatSessionMatch.populate("chats chats.user");
+                    socket.emit("fetched-data/"+chatId,{message:"Success",status:true,data:populateMessages});
                 })
             }
             else{
@@ -83,18 +84,19 @@ const addMessage = async ({socket,data})=>{
 
 const addRecentChats = async (req, res) => {
     const {userId,friendId} = req.body;
+    console.log(req.body)
     try {
         const userMatch = await userDb.findById(userId);
         const frndMatch = await userDb.findById(friendId);
         if (userMatch && frndMatch) {
             // Assuming recentChats is an array field in your schema
-            var chatList = [...userMatch.recentChats, friendId];
-            chatList = [...new Set(chatList)];
+
             await userDb.findOneAndUpdate({_id:userId},{
-                $set : {
-                    recentChats : chatList
+                $addToSet : {
+                    recentChats : friendId
                 }
             });
+            const chatList = await userDb.findById(userId).populate("recentChats");
             res.status(200).json({ message: "Successfully added friend to recent chats!", status: true,chatList:chatList });
         } else {
             res.status(401).json({ message: "Unauthorized access or user not found!", status: false });

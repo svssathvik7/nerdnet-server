@@ -22,7 +22,7 @@ const createCommunity = async(req,res)=>{
             );
             await newCommunity.save();
             await userModel.findOneAndUpdate({_id:data.user},{
-                $push : { 
+                $addToSet : { 
                     spaces : newCommunity._id
                 }
             });

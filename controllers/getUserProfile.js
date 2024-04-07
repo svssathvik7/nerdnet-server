@@ -34,6 +34,7 @@ const getUserProfile = async ({socket,data})=>{
         if(userMatch && reqUserMatch)
         {
             const userProfileData = {
+                _id : userMatch._id,
                 dp : userMatch.dp,
                 username : userMatch.username,
                 email : userMatch.email,
