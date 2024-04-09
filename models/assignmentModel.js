@@ -29,7 +29,19 @@ const assignmentSchema = new mongoose.Schema(
                     required : true
                 }
             }
-        ]
+        ],
+        leaderboard : [{
+            user : {
+                type : mongoose.Schema.Types.ObjectId,
+                ref : "users"
+            },
+            score : {
+                type : Number
+            }
+        }],
+        outOf : {
+            type : Number
+        }
     }
 )
 const assignmentModel = new mongoose.model("assingments",assignmentSchema);

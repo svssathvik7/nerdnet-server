@@ -54,16 +54,20 @@ const getCommunityInfo = async({socket,data})=>{
                         select : "-password"
                     }
                 }
+            },
+            {
+                path : "assessments"
             }
         ]);
         if(community_match){
             return ({message:"Community found",status:true,community_info:community_match});
         }
         else{
-            return ("set-community-info",{message:"Community not found!",status:false});
+            return {message:"Community not found!",status:false};
         }
     } catch (error) {
-        return ("set-community-info",{message:"Something went wrong!",status:false});
+        console.log(error)
+        return {message:"Something went wrong!",status:false};
     }
 }
 const checkUserSubscription = async({socket,data})=>{

@@ -46,7 +46,7 @@ const communitySchema = new mongoose.Schema({
     assessments : [
         {
             type : mongoose.Schema.Types.ObjectId,
-            ref : "assignments"
+            ref : "assingments"
         }
     ]
 });
