@@ -61,23 +61,28 @@ const addMessage = async ({socket,data})=>{
                     await chatSessionMatch.chats.push(newMessage);
                     await chatSessionMatch.save();
                     socket.emit("added-message",{message:"Success",status:true});
-                    const populateMessages = await chatSessionMatch.populate("chats chats.user");
-                    socket.emit("fetched-data/"+chatId,{message:"Success",status:true,data:populateMessages});
+                    const newChatSessionMatch = await chatDb.findOne({id:chatId});
+                    const populateMessages = await newChatSessionMatch.populate("chats chats.user");
+                    const resss = socket.broadcast.emit("fetched-data/"+chatId,{message: "New message received",
+                    status: true,
+                    data: { chats: populateMessages.chats }});  
                 })
             }
             else{
                 socket.emit("added-message",{message:"No chat room found!",status:false});
+                return ({message:"No chat room found!",status:false})
             }
             // session.commitTransaction();
         }
         else{
             socket.emit("added-message",{message:"Critical Security threat!",status:false});
+            return {message:"Security alert!",status:false}
         }
     }
     catch(error){
         console.log(error);
         // session.abortTransaction();
-        socket.emit("fetched-data",{message:"Something went wrong!",status:false});
+        return {message:"Something went wrong!",status:false};
     }
 }
 

@@ -48,7 +48,7 @@ io.on("connection",(socket)=>{
     socket.on("fetch-chat",(data)=>{
         getChat({socket,data});
     });
-    socket.on("add-message",(data)=>{
+    socket.on("add-message",async(data)=>{
         addMessage({socket,data});
     });
     socket.on("get-community-details",async(data,callback)=>{
