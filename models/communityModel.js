@@ -42,7 +42,13 @@ const communitySchema = new mongoose.Schema({
     admins : [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'users' // Assuming you have a User model
-    }]
+    }],
+    assessments : [
+        {
+            type : mongoose.Schema.Types.ObjectId,
+            ref : "assignments"
+        }
+    ]
 });
 const communityModel = mongoose.model("communities", communitySchema);
 module.exports = { communityModel };

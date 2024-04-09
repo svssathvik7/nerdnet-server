@@ -7,6 +7,7 @@ const postRoute = require("./routes/postRouting.js");
 const statRoute = require("./routes/stats.js");
 const chatRoute = require("./routes/chatRouting.js");
 const communityRoute = require("./routes/community.js");
+const AssessmentsRoute = require("./routes/assessmentsRoute.js");
 const {createCommunity,getCommunityInfo, checkUserSubscription} = require("./controllers/communityController");
 const InterestsRoute = require("./routes/interests.js");
 const express = require("express");
@@ -34,6 +35,7 @@ app.use("/api/chat/",chatRoute);
 app.use("/api/community/",communityRoute);
 app.use("/api/interests/",InterestsRoute);
 app.use("/api/admins/",isAdmin,adminRoute);
+app.use("/api/assessments/",AssessmentsRoute);
 const expressServer = app.listen(3500,() => {
     debugLog("Server running!");
 });
